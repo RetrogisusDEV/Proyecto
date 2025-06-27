@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="normalize.css" />
+    <title>Base</title>
+  </head>
+  <style>
+    /* --- RESET & BASE --- */
+    html {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      font-size: 16px;
+      background-color: whitesmoke;
+      color: #222;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    *, *:before, *:after { box-sizing: inherit; }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-color: whitesmoke;
+      display: flex;
+      flex-direction: column;
+      padding-top: 64px;
+    }
+
+    /* --- NAVBAR --- */
+    .navbar {
+      background: linear-gradient(to right, #2563eb, #1e3a8a);
+      color: whitesmoke;
+      padding: 12px 8vw 12px 8vw;
+      border-radius: 0 0 16px 16px;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-sizing: border-box;
+      gap: 12px;
+    }
+    .navbar h2 {
+      margin: 0;
+      font-size: 1.3em;
+      font-weight: 600;
+      letter-spacing: 1px;
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .navbar-btns {
+      display: flex;
+      gap: 8px;
+    }
+    .navbar button {
+      background: linear-gradient(to left, #c7d2fe, #dbeafe);
+      color: #1e293b;
+      border: none;
+      font-size: 1em;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      transition: all 0.2s;
+      min-width: 80px;
+      font-weight: 500;
+      outline: none;
+    }
+    .navbar button.active, .navbar button:focus {
+      background: linear-gradient(to right, #6366f1, #60a5fa);
+      color: #fff;
+    }
+    .navbar button:hover {
+      background: linear-gradient(to right, #dbeafe, white);
+      color: #1e293b;
+      transform: scale(1.07);
+    }
+    .navbar button:active {
+      background: linear-gradient(to right, #1e293b, #2563eb);
+      color: whitesmoke;
+      transform: scale(0.98);
+    }
+
+    /* --- SIDEBARS --- */
+    .content-left, .content-right {
+      position: fixed;
+      top: 64px;
+      height: calc(100vh - 64px);
+      background: linear-gradient(to right, #e3e7ef, #f0f2f5);
+      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      overflow-y: auto;
+      z-index: 999;
+      padding: 24px 12px 16px 16px;
+      gap: 12px;
+      width: 260px;
+      transition: left 0.2s, right 0.2s;
+    }
+    .content-left {
+      left: 0;
+      border-radius: 0 16px 16px 0;
+    }
+    .content-right {
+      right: 0;
+      border-radius: 16px 0 0 16px;
+      box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+      background: linear-gradient(to left, #e3e7ef, #f0f2f5);
+    }
+    .sidebar-title {
+      font-weight: 700;
+      font-size: 1.3em;
+      margin-bottom: 8px;
+    }
+    .sidebar-content {
+      font-size: 1em;
+      color: #333;
+      line-height: 1.5;
+      max-width: 220px;
+    }
+
+    /* --- NODE LIST --- */
+    .node-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      margin-top: 8px;
+    }
+    .node-btn {
+      width: 100%;
+      padding: 14px 10px;
+      background: linear-gradient(to right, #dbeafe, #f1f5f9);
+      border: 1px solid #b6c2d9;
+      border-radius: 8px;
+      font-size: 1em;
+      color: #1e293b;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: background 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      white-space: normal;
+      outline: none;
+    }
+    .node-btn.active, .node-btn:focus {
+      background: linear-gradient(to right, #6366f1, #60a5fa);
+      color: #fff;
+    }
+    .node-btn:hover {
+      background: linear-gradient(to right, #c7d2fe, #e0e7ef);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+    .node-btn:active {
+      background: linear-gradient(to right, #a5b4fc, #cbd5e1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      transform: scale(0.98);
+    }
+    .node-btn .node-title {
+      font-weight: 700;
+      font-size: 1.1em;
+      margin-bottom: 2px;
+    }
+    .node-btn .node-info {
+      font-size: 0.98em;
+      color: #334155;
+    }
+
+    /* --- MAIN CONTENT --- */
+    main {
+      flex: 1 1 auto;
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 16px 0 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .content {
+      width: 100%;
+      min-height: 200px;
+      background: #e3e7ef;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      margin-bottom: 24px;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 900px) {
+      .navbar { padding: 12px 2vw; }
+      .content-left, .content-right { width: 180px; padding: 16px 6px 8px 8px; }
+      main { max-width: 98vw; }
+    }
+    @media (max-width: 600px) {
+      html { font-size: 14px; }
+      .navbar { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px 2vw; }
+      .navbar h2 { font-size: 1.1em; }
+      .navbar-btns { width: 100%; justify-content: space-between; }
+      .content-left, .content-right {
+        position: static;
+        width: 100vw;
+        height: auto;
+        min-height: 0;
+        max-height: 220px;
+        flex-direction: row;
+        align-items: flex-start;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 10px 4vw 10px 4vw;
+        margin-bottom: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+      .sidebar-title, .sidebar-content { max-width: 90vw; }
+      main { padding: 8px 2vw 0 2vw; }
+    }
+  </style>
+  <body>
+    <div class="navbar">
+      <h2>Preview program</h2>
+      <div class="navbar-btns">
+        <button id="btnReportes" class="active">Reportes</button>
+        <button id="btnNodos">Nodos</button>
+        <button id="btnMenu">Menu</button>
+      </div>
+    </div>
+    <div class="content-left" id="sidebar-info">
+      <span class="sidebar-title">Información</span>
+      <div class="sidebar-content" id="sidebarContent">
+        <span style="color:#333;font-size:1.1em;">Esta es una vista previa del programa.</span><br>
+        <span style="color:#333;font-size:1.1em;">Puedes ver los nodos y su información aquí.</span>
+      </div>
+    </div>
+    <div class="content-right" id="sidebar-nodes">
+      <span class="sidebar-title" id="sidebarTitle">Reportes</span>
+      <div class="node-list" id="nodeList"></div>
+    </div>
+    <main>
+      <div class="content">
+        <span style="color:#333;font-size:1.2em;">Contenido de ejemplo</span>
+      </div>
+    </main>
+  <script>
+    // Datos de ejemplo de nodos
+    const nodes = [
+      { ID_nodo: "N-001", Cantidad_cajas: 5, Estado: "Activo" },
+      { ID_nodo: "N-002", Cantidad_cajas: 3, Estado: "Inactivo" },
+      { ID_nodo: "N-003", Cantidad_cajas: 7, Estado: "Mantenimiento" },
+      { ID_nodo: "N-004", Cantidad_cajas: 2, Estado: "Activo" },
+      { ID_nodo: "N-005", Cantidad_cajas: 4, Estado: "Activo" },
+      { ID_nodo: "N-006", Cantidad_cajas: 6, Estado: "Inactivo" },
+      { ID_nodo: "N-007", Cantidad_cajas: 1, Estado: "Activo" },
+      { ID_nodo: "N-008", Cantidad_cajas: 8, Estado: "Mantenimiento" }
+    ];
+
+    // Contenidos para cada sección
+    const sidebarContents = {
+      Reportes: {
+        title: "Reportes",
+        html: `<div class='sidebar-content'>
+          <span style='color:#333;font-size:1.1em;'>Aquí puedes ver y generar reportes del sistema.</span><br>
+          <span style='color:#333;font-size:1.1em;'>Selecciona un nodo para ver detalles específicos.</span>
+        </div>`,
+        nodeList: nodes.map(node =>
+          `<button class='node-btn'>
+            <span class='node-title'>${node.ID_nodo}</span>
+            <span class='node-info'>Cajas: ${node.Cantidad_cajas} | Estado: ${node.Estado}</span>
+          </button>`
+        ).join('')
+      },
+      Nodos: {
+        title: "Nodos",
+        html: `<div class='sidebar-content'>
+          <span style='color:#333;font-size:1.1em;'>Listado de nodos registrados en el sistema.</span><br>
+          <span style='color:#333;font-size:1.1em;'>Haz clic en un nodo para ver más información.</span>
+        </div>`,
+        nodeList: nodes.map(node =>
+          `<button class='node-btn'>
+            <span class='node-title'>${node.ID_nodo}</span>
+            <span class='node-info'>Cajas: ${node.Cantidad_cajas} | Estado: ${node.Estado}</span>
+          </button>`
+        ).join('')
+      },
+      Menu: {
+        title: "Menú",
+        html: `<div class='sidebar-content'>
+          <span style='color:#333;font-size:1.1em;'>Opciones del sistema:</span><ul style='margin:8px 0 0 16px;padding:0;'><li>Configuración</li><li>Ayuda</li><li>Salir</li></ul>
+        </div>`,
+        nodeList: `<button class='node-btn'><span class='node-title'>Configuración</span></button>
+                  <button class='node-btn'><span class='node-title'>Ayuda</span></button>
+                  <button class='node-btn'><span class='node-title'>Salir</span></button>`
+      }
+    };
+
+    // Navbar button logic
+    const btns = [
+      document.getElementById('btnReportes'),
+      document.getElementById('btnNodos'),
+      document.getElementById('btnMenu')
+    ];
+    const sidebarTitle = document.getElementById('sidebarTitle');
+    const sidebarContent = document.getElementById('sidebarContent');
+    const nodeList = document.getElementById('nodeList');
+
+    function setActiveSection(section) {
+      btns.forEach(btn => btn.classList.remove('active'));
+      if (section === 'Reportes') btns[0].classList.add('active');
+      if (section === 'Nodos') btns[1].classList.add('active');
+      if (section === 'Menu') btns[2].classList.add('active');
+      sidebarTitle.textContent = sidebarContents[section].title;
+      sidebarContent.innerHTML = sidebarContents[section].html;
+      nodeList.innerHTML = sidebarContents[section].nodeList;
+    }
+    btns[0].onclick = () => setActiveSection('Reportes');
+    btns[1].onclick = () => setActiveSection('Nodos');
+    btns[2].onclick = () => setActiveSection('Menu');
+    // Inicializa con Reportes
+    setActiveSection('Reportes');
+  </script>
+  </body>
+</html>
