@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="normalize.css" />
+    <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.0/dist/ol.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ol@v10.6.0/ol.css"
+    />
+
     <title>Base</title>
   </head>
   <style>
@@ -18,13 +24,17 @@
       padding: 0;
       box-sizing: border-box;
     }
-    *, *:before, *:after { box-sizing: inherit; }
+    *,
+    *:before,
+    *:after {
+      box-sizing: inherit;
+    }
 
     body {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      background-color: whitesmoke;
+      background: linear-gradient(to Bottom, white, whitesmoke);
       display: flex;
       flex-direction: column;
       padding-top: 64px;
@@ -46,7 +56,7 @@
       right: 0;
       width: 100%;
       z-index: 1000;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       box-sizing: border-box;
       gap: 12px;
     }
@@ -73,13 +83,14 @@
       cursor: pointer;
       padding: 8px 14px;
       border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
       transition: all 0.2s;
       min-width: 80px;
       font-weight: 500;
       outline: none;
     }
-    .navbar button.active, .navbar button:focus {
+    .navbar button.active,
+    .navbar button:focus {
       background: linear-gradient(to right, #6366f1, #60a5fa);
       color: #fff;
     }
@@ -95,12 +106,13 @@
     }
 
     /* --- SIDEBARS --- */
-    .content-left, .content-right {
+    .content-left,
+    .content-right {
       position: fixed;
       top: 64px;
       height: calc(100vh - 64px);
       background: linear-gradient(to right, #e3e7ef, #f0f2f5);
-      box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
       display: flex;
       flex-direction: column;
       align-items: flex-start;
@@ -118,7 +130,7 @@
     .content-right {
       right: 0;
       border-radius: 16px 0 0 16px;
-      box-shadow: -2px 0 8px rgba(0,0,0,0.04);
+      box-shadow: -2px 0 8px rgba(0, 0, 0, 0.04);
       background: linear-gradient(to left, #e3e7ef, #f0f2f5);
     }
     .sidebar-title {
@@ -151,7 +163,7 @@
       color: #1e293b;
       text-align: left;
       cursor: pointer;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
       transition: background 0.2s, box-shadow 0.2s;
       display: flex;
       flex-direction: column;
@@ -159,17 +171,19 @@
       white-space: normal;
       outline: none;
     }
-    .node-btn.active, .node-btn:focus {
+    .node-btn.active,
+    .node-btn:focus {
       background: linear-gradient(to right, #6366f1, #60a5fa);
       color: #fff;
     }
     .node-btn:hover {
       background: linear-gradient(to right, #c7d2fe, #e0e7ef);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      color: #000;
     }
     .node-btn:active {
       background: linear-gradient(to right, #a5b4fc, #cbd5e1);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
       transform: scale(0.98);
     }
     .node-btn .node-title {
@@ -209,16 +223,37 @@
 
     /* --- RESPONSIVE --- */
     @media (max-width: 900px) {
-      .navbar { padding: 12px 2vw; }
-      .content-left, .content-right { width: 180px; padding: 16px 6px 8px 8px; }
-      main { max-width: 98vw; }
+      .navbar {
+        padding: 12px 2vw;
+      }
+      .content-left,
+      .content-right {
+        width: 180px;
+        padding: 16px 6px 8px 8px;
+      }
+      main {
+        max-width: 98vw;
+      }
     }
     @media (max-width: 600px) {
-      html { font-size: 14px; }
-      .navbar { flex-direction: column; align-items: flex-start; gap: 8px; padding: 10px 2vw; }
-      .navbar h2 { font-size: 1.1em; }
-      .navbar-btns { width: 100%; justify-content: space-between; }
-      .content-left, .content-right {
+      html {
+        font-size: 14px;
+      }
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 10px 2vw;
+      }
+      .navbar h2 {
+        font-size: 1.1em;
+      }
+      .navbar-btns {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .content-left,
+      .content-right {
         position: static;
         width: 100vw;
         height: auto;
@@ -233,8 +268,13 @@
         overflow-x: auto;
         overflow-y: hidden;
       }
-      .sidebar-title, .sidebar-content { max-width: 90vw; }
-      main { padding: 8px 2vw 0 2vw; }
+      .sidebar-title,
+      .sidebar-content {
+        max-width: 90vw;
+      }
+      main {
+        padding: 8px 2vw 0 2vw;
+      }
     }
   </style>
   <body>
@@ -249,8 +289,12 @@
     <div class="content-left" id="sidebar-info">
       <span class="sidebar-title">Información</span>
       <div class="sidebar-content" id="sidebarContent">
-        <span style="color:#333;font-size:1.1em;">Esta es una vista previa del programa.</span><br>
-        <span style="color:#333;font-size:1.1em;">Puedes ver los nodos y su información aquí.</span>
+        <span style="color: #333; font-size: 1.1em"
+          >Esta es una vista previa del programa.</span
+        ><br />
+        <span style="color: #333; font-size: 1.1em"
+          >Puedes ver los nodos y su información aquí.</span
+        >
       </div>
     </div>
     <div class="content-right" id="sidebar-nodes">
@@ -259,85 +303,116 @@
     </div>
     <main>
       <div class="content">
-        <span style="color:#333;font-size:1.2em;">Contenido de ejemplo</span>
+        <div
+          id="map"
+          style="
+            width: 100%;
+            height: 85vh;
+            min-height: 220px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+          "
+        ></div>
       </div>
     </main>
-  <script>
-    // Datos de ejemplo de nodos
-    const nodes = [
-      { ID_nodo: "N-001", Cantidad_cajas: 5, Estado: "Activo" },
-      { ID_nodo: "N-002", Cantidad_cajas: 3, Estado: "Inactivo" },
-      { ID_nodo: "N-003", Cantidad_cajas: 7, Estado: "Mantenimiento" },
-      { ID_nodo: "N-004", Cantidad_cajas: 2, Estado: "Activo" },
-      { ID_nodo: "N-005", Cantidad_cajas: 4, Estado: "Activo" },
-      { ID_nodo: "N-006", Cantidad_cajas: 6, Estado: "Inactivo" },
-      { ID_nodo: "N-007", Cantidad_cajas: 1, Estado: "Activo" },
-      { ID_nodo: "N-008", Cantidad_cajas: 8, Estado: "Mantenimiento" }
-    ];
+    <script>
+      // Datos de ejemplo de nodos
+      const nodes = [
+        { ID_nodo: "N-001", Cantidad_cajas: 5, Estado: "Activo" },
+        { ID_nodo: "N-002", Cantidad_cajas: 3, Estado: "Inactivo" },
+        { ID_nodo: "N-003", Cantidad_cajas: 7, Estado: "Mantenimiento" },
+        { ID_nodo: "N-004", Cantidad_cajas: 2, Estado: "Activo" },
+        { ID_nodo: "N-005", Cantidad_cajas: 4, Estado: "Activo" },
+        { ID_nodo: "N-006", Cantidad_cajas: 6, Estado: "Inactivo" },
+        { ID_nodo: "N-007", Cantidad_cajas: 1, Estado: "Activo" },
+        { ID_nodo: "N-008", Cantidad_cajas: 8, Estado: "Mantenimiento" },
+      ];
 
-    // Contenidos para cada sección
-    const sidebarContents = {
-      Reportes: {
-        title: "Reportes",
-        html: `<div class='sidebar-content'>
+      // Contenidos para cada sección
+      const sidebarContents = {
+        Reportes: {
+          title: "Reportes",
+          html: `<div class='sidebar-content'>
           <span style='color:#333;font-size:1.1em;'>Aquí puedes ver y generar reportes del sistema.</span><br>
           <span style='color:#333;font-size:1.1em;'>Selecciona un nodo para ver detalles específicos.</span>
         </div>`,
-        nodeList: nodes.map(node =>
-          `<button class='node-btn'>
+          nodeList: nodes
+            .map(
+              (node) =>
+                `<button class='node-btn'>
             <span class='node-title'>${node.ID_nodo}</span>
             <span class='node-info'>Cajas: ${node.Cantidad_cajas} | Estado: ${node.Estado}</span>
           </button>`
-        ).join('')
-      },
-      Nodos: {
-        title: "Nodos",
-        html: `<div class='sidebar-content'>
+            )
+            .join(""),
+        },
+        Nodos: {
+          title: "Nodos",
+          html: `<div class='sidebar-content'>
           <span style='color:#333;font-size:1.1em;'>Listado de nodos registrados en el sistema.</span><br>
           <span style='color:#333;font-size:1.1em;'>Haz clic en un nodo para ver más información.</span>
         </div>`,
-        nodeList: nodes.map(node =>
-          `<button class='node-btn'>
+          nodeList: nodes
+            .map(
+              (node) =>
+                `<button class='node-btn'>
             <span class='node-title'>${node.ID_nodo}</span>
             <span class='node-info'>Cajas: ${node.Cantidad_cajas} | Estado: ${node.Estado}</span>
           </button>`
-        ).join('')
-      },
-      Menu: {
-        title: "Menú",
-        html: `<div class='sidebar-content'>
+            )
+            .join(""),
+        },
+        Menu: {
+          title: "Menú",
+          html: `<div class='sidebar-content'>
           <span style='color:#333;font-size:1.1em;'>Opciones del sistema:</span><ul style='margin:8px 0 0 16px;padding:0;'><li>Configuración</li><li>Ayuda</li><li>Salir</li></ul>
         </div>`,
-        nodeList: `<button class='node-btn'><span class='node-title'>Configuración</span></button>
+          nodeList: `<button class='node-btn'><span class='node-title'>Configuración</span></button>
                   <button class='node-btn'><span class='node-title'>Ayuda</span></button>
-                  <button class='node-btn'><span class='node-title'>Salir</span></button>`
+                  <button class='node-btn'><span class='node-title'>Salir</span></button>`,
+        },
+      };
+
+      // Navbar button logic
+      const btns = [
+        document.getElementById("btnReportes"),
+        document.getElementById("btnNodos"),
+        document.getElementById("btnMenu"),
+      ];
+      const sidebarTitle = document.getElementById("sidebarTitle");
+      const sidebarContent = document.getElementById("sidebarContent");
+      const nodeList = document.getElementById("nodeList");
+
+      function setActiveSection(section) {
+        btns.forEach((btn) => btn.classList.remove("active"));
+        if (section === "Reportes") btns[0].classList.add("active");
+        if (section === "Nodos") btns[1].classList.add("active");
+        if (section === "Menu") btns[2].classList.add("active");
+        sidebarTitle.textContent = sidebarContents[section].title;
+        sidebarContent.innerHTML = sidebarContents[section].html;
+        nodeList.innerHTML = sidebarContents[section].nodeList;
       }
-    };
+      btns[0].onclick = () => setActiveSection("Reportes");
+      btns[1].onclick = () => setActiveSection("Nodos");
+      btns[2].onclick = () => setActiveSection("Menu");
+      // Inicializa con Reportes
+      setActiveSection("Reportes");
 
-    // Navbar button logic
-    const btns = [
-      document.getElementById('btnReportes'),
-      document.getElementById('btnNodos'),
-      document.getElementById('btnMenu')
-    ];
-    const sidebarTitle = document.getElementById('sidebarTitle');
-    const sidebarContent = document.getElementById('sidebarContent');
-    const nodeList = document.getElementById('nodeList');
-
-    function setActiveSection(section) {
-      btns.forEach(btn => btn.classList.remove('active'));
-      if (section === 'Reportes') btns[0].classList.add('active');
-      if (section === 'Nodos') btns[1].classList.add('active');
-      if (section === 'Menu') btns[2].classList.add('active');
-      sidebarTitle.textContent = sidebarContents[section].title;
-      sidebarContent.innerHTML = sidebarContents[section].html;
-      nodeList.innerHTML = sidebarContents[section].nodeList;
-    }
-    btns[0].onclick = () => setActiveSection('Reportes');
-    btns[1].onclick = () => setActiveSection('Nodos');
-    btns[2].onclick = () => setActiveSection('Menu');
-    // Inicializa con Reportes
-    setActiveSection('Reportes');
-  </script>
+      // OpenLayers map setup
+      document.addEventListener("DOMContentLoaded", function () {
+        const map = new ol.Map({
+          target: "map",
+          layers: [
+            new ol.layer.Tile({
+              source: new ol.source.OSM(),
+            }),
+          ],
+          view: new ol.View({
+            center: ol.proj.fromLonLat([-66.2442, 9.8606]), // Altagracia de Orituco, Guárico, Venezuela
+            zoom: 14,
+          }),
+        });
+      });
+    </script>
   </body>
 </html>

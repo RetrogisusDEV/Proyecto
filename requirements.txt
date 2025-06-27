@@ -1,3 +1,8 @@
 Flask
 Kivy
 requests
+pywebview
+# Para Android, se recomienda instalar también:
+# kivy
+# kivy_garden.xcamera
+# kivy_garden.webview
