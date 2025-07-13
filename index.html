@@ -1,18 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.0/ol.css" />
-    <title>Base con Firebase</title>
+    <title>Base con Firebase - Diseño Accesible</title>
     <style>
       /* --- RESET & BASE --- */
+      :root {
+        /* Paleta de colores accesible */
+        --primary-100: #dbeafe;
+        --primary-300: #93c5fd;
+        --primary-500: #3b82f6;
+        --primary-700: #1d4ed8;
+        --primary-900: #1e3a8a;
+        
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-500: #6b7280;
+        --gray-700: #374151;
+        --gray-900: #111827;
+        
+        --success-100: #dcfce7;
+        --success-500: #22c55e;
+        --success-700: #15803d;
+        
+        --warning-100: #fef3c7;
+        --warning-500: #f59e0b;
+        --warning-700: #b45309;
+        
+        --error-100: #fee2e2;
+        --error-500: #ef4444;
+        --error-700: #b91c1c;
+        
+        --neumorphic-shadow: 8px 8px 16px rgba(0, 0, 0, 0.1), 
+                             -8px -8px 16px rgba(255, 255, 255, 0.7);
+        --neumorphic-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.1), 
+                            inset -4px -4px 8px rgba(255, 255, 255, 0.7);
+        
+        --transition: all 0.3s ease;
+      }
+      
       html {
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         font-size: 16px;
-        background-color: whitesmoke;
-        color: #222;
+        background-color: var(--gray-100);
+        color: var(--gray-900);
         margin: 0;
         padding: 0;
         box-sizing: border-box;
@@ -27,7 +63,7 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
-        background: linear-gradient(to Bottom, white, whitesmoke);
+        background: linear-gradient(145deg, #e6e9ee, #f0f2f5);
         display: flex;
         flex-direction: column;
         padding-top: 64px;
@@ -35,9 +71,9 @@
 
       /* --- NAVBAR --- */
       .navbar {
-        background: linear-gradient(to right, #2563eb, #1e3a8a);
-        color: whitesmoke;
-        padding: 12px 8vw 12px 8vw;
+        background: linear-gradient(145deg, var(--primary-700), var(--primary-900));
+        color: white;
+        padding: 12px 8vw;
         border-radius: 0 0 16px 16px;
         display: flex;
         flex-wrap: nowrap;
@@ -49,15 +85,15 @@
         right: 0;
         width: 100%;
         z-index: 1000;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         box-sizing: border-box;
         gap: 12px;
       }
       .navbar h2 {
         margin: 0;
-        font-size: 1.3em;
+        font-size: 1.3rem;
         font-weight: 600;
-        letter-spacing: 1px;
+        letter-spacing: 0.5px;
         flex: 1 1 auto;
         min-width: 0;
         white-space: nowrap;
@@ -69,33 +105,53 @@
         gap: 8px;
       }
       .navbar button {
-        background: linear-gradient(to left, #c7d2fe, #dbeafe);
-        color: #1e293b;
+        background: linear-gradient(145deg, var(--primary-100), #e0e7ff);
+        color: var(--primary-900);
         border: none;
-        font-size: 1em;
+        font-size: 1rem;
         cursor: pointer;
-        padding: 8px 14px;
-        border-radius: 6px;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
-        transition: all 0.2s;
-        min-width: 80px;
-        font-weight: 500;
+        padding: 10px 16px;
+        border-radius: 10px;
+        box-shadow: var(--neumorphic-shadow);
+        transition: var(--transition);
+        min-width: 90px;
+        font-weight: 600;
         outline: none;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .navbar button::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2);
+        opacity: 0;
+        transition: var(--transition);
       }
       .navbar button.active,
       .navbar button:focus {
-        background: linear-gradient(to right, #6366f1, #60a5fa);
-        color: #fff;
+        background: linear-gradient(145deg, var(--primary-500), var(--primary-700));
+        color: white;
+        box-shadow: var(--neumorphic-inset);
+        transform: translateY(1px);
       }
       .navbar button:hover {
-        background: linear-gradient(to right, #dbeafe, white);
-        color: #1e293b;
-        transform: scale(1.07);
+        background: linear-gradient(145deg, #e0e7ff, white);
+        color: var(--primary-900);
+        transform: scale(1.05);
+      }
+      .navbar button:hover::after {
+        opacity: 1;
       }
       .navbar button:active {
-        background: linear-gradient(to right, #1e293b, #2563eb);
-        color: whitesmoke;
+        background: linear-gradient(145deg, var(--primary-900), var(--primary-700));
+        color: white;
         transform: scale(0.98);
+        box-shadow: var(--neumorphic-inset);
       }
 
       /* --- SIDEBARS --- */
@@ -104,110 +160,141 @@
         position: fixed;
         top: 64px;
         height: calc(100vh - 64px);
-        background: linear-gradient(to right, #e3e7ef, #f0f2f5);
-        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
+        background: linear-gradient(145deg, #e3e7ef, #f0f2f5);
+        box-shadow: var(--neumorphic-shadow);
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         overflow-y: auto;
         z-index: 999;
-        padding: 24px 12px 16px 16px;
-        gap: 12px;
-        width: 260px;
-        transition: left 0.2s, right 0.2s;
+        padding: 24px 16px;
+        gap: 16px;
+        width: 280px;
+        transition: left 0.3s, right 0.3s;
+        border-radius: 16px;
+        margin: 12px;
       }
       .content-left {
         left: 0;
-        border-radius: 0 16px 16px 0;
       }
       .content-right {
         right: 0;
-        border-radius: 16px 0 0 16px;
-        box-shadow: -2px 0 8px rgba(0, 0, 0, 0.04);
-        background: linear-gradient(to left, #e3e7ef, #f0f2f5);
+        background: linear-gradient(145deg, #e3e7ef, #f0f2f5);
       }
       .sidebar-title {
         font-weight: 700;
-        font-size: 1.3em;
-        margin-bottom: 8px;
+        font-size: 1.4rem;
+        margin-bottom: 12px;
+        color: var(--primary-700);
+        border-bottom: 2px solid var(--primary-300);
+        padding-bottom: 8px;
+        width: 100%;
       }
       .sidebar-content {
-        font-size: 1em;
-        color: #333;
-        line-height: 1.5;
-        max-width: 220px;
+        font-size: 1rem;
+        color: var(--gray-700);
+        line-height: 1.6;
+        max-width: 100%;
       }
 
       /* --- NODE LIST --- */
       .node-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 14px;
         width: 100%;
         margin-top: 8px;
       }
       .node-btn {
         width: 100%;
-        padding: 14px 10px;
-        border: 1px solid #b6c2d9;
-        border-radius: 8px;
-        font-size: 1em;
+        padding: 16px 14px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1rem;
         text-align: left;
         cursor: pointer;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
-        transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+        box-shadow: var(--neumorphic-shadow);
+        transition: var(--transition);
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         white-space: normal;
         outline: none;
+        position: relative;
       }
 
-      /* --- ESTILOS DE ESTADO DE NODOS (NUEVO) --- */
+      /* --- ESTILOS DE ESTADO DE NODOS (MEJORADOS) --- */
       .node-btn.status-activo {
-        background: linear-gradient(to right, #dcfce7, #f0fdf4);
-        border-color: #4ade80;
-        color: #166534;
+        background: linear-gradient(145deg, var(--success-100), #e6f7ed);
+        color: var(--success-700);
+        border-left: 4px solid var(--success-500);
       }
       .node-btn.status-activo:hover {
-        background: linear-gradient(to right, #bbf7d0, #ffffff);
-        color: #15803d;
+        background: linear-gradient(145deg, #c8f0d6, #ffffff);
+        color: var(--success-700);
+        transform: translateY(-2px);
       }
       .node-btn.status-inactivo {
-        background: linear-gradient(to right, #e5e7eb, #f3f4f6);
-        border-color: #9ca3af;
-        color: #374151;
+        background: linear-gradient(145deg, var(--gray-100), var(--gray-200));
+        color: var(--gray-700);
+        border-left: 4px solid var(--gray-500);
       }
       .node-btn.status-inactivo:hover {
-        background: linear-gradient(to right, #d1d5db, #ffffff);
-        color: #1f2937;
+        background: linear-gradient(145deg, #e5e7eb, #ffffff);
+        color: var(--gray-900);
+        transform: translateY(-2px);
       }
       .node-btn.status-mantenimiento {
-        background: linear-gradient(to right, #ffedd5, #fffbeb);
-        border-color: #fb923c;
-        color: #9a3412;
+        background: linear-gradient(145deg, var(--warning-100), #fef7e6);
+        color: var(--warning-700);
+        border-left: 4px solid var(--warning-500);
       }
        .node-btn.status-mantenimiento:hover {
-        background: linear-gradient(to right, #fed7aa, #ffffff);
-        color: #c2410c;
+        background: linear-gradient(145deg, #fde9c9, #ffffff);
+        color: var(--warning-700);
+        transform: translateY(-2px);
       }
 
       .node-btn.active,
       .node-btn:focus {
-        background: linear-gradient(to right, #6366f1, #60a5fa);
-        color: #fff !important; /* Forzar color de texto */
+        background: linear-gradient(145deg, var(--primary-300), var(--primary-100));
+        color: var(--primary-900) !important;
+        box-shadow: var(--neumorphic-inset);
+        transform: translateY(1px);
       }
       .node-btn:active {
-        transform: scale(0.98);
+        transform: translateY(1px);
+        box-shadow: var(--neumorphic-inset);
       }
       .node-btn .node-title {
         font-weight: 700;
-        font-size: 1.1em;
-        margin-bottom: 2px;
+        font-size: 1.15rem;
+        margin-bottom: 4px;
       }
       .node-btn .node-info {
-        font-size: 0.98em;
-        color: inherit; /* Hereda el color del botón padre */
+        font-size: 0.95rem;
+        color: inherit;
+        opacity: 0.9;
+      }
+      
+      /* Indicador de estado */
+      .node-status {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        box-shadow: 0 0 4px rgba(0,0,0,0.2);
+      }
+      .status-activo .node-status {
+        background-color: var(--success-500);
+      }
+      .status-inactivo .node-status {
+        background-color: var(--gray-500);
+      }
+      .status-mantenimiento .node-status {
+        background-color: var(--warning-500);
       }
 
       /* --- MAIN CONTENT --- */
@@ -216,7 +303,7 @@
         width: 100%;
         max-width: 900px;
         margin: 0 auto;
-        padding: 32px 16px 0 16px;
+        padding: 32px 16px 40px;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -226,69 +313,116 @@
       .content {
         width: 100%;
         min-height: 200px;
-        background: #e3e7ef;
-        border-radius: 12px;
+        background: var(--gray-100);
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        box-shadow: var(--neumorphic-shadow);
         margin-bottom: 24px;
+        padding: 4px;
       }
 
       /* --- RESPONSIVE --- */
       @media (max-width: 900px) {
         .navbar {
-          padding: 12px 2vw;
+          padding: 12px 4vw;
         }
         .content-left,
         .content-right {
-          width: 180px;
-          padding: 16px 6px 8px 8px;
+          width: 220px;
+          padding: 16px 12px;
         }
         main {
-          max-width: 98vw;
+          max-width: 96vw;
+        }
+      }
+      @media (max-width: 768px) {
+        .content-left,
+        .content-right {
+          width: 200px;
+          padding: 14px 10px;
         }
       }
       @media (max-width: 600px) {
         html {
-          font-size: 14px;
+          font-size: 15px;
         }
         .navbar {
           flex-direction: column;
           align-items: flex-start;
           gap: 8px;
-          padding: 10px 2vw;
+          padding: 12px 4vw;
         }
         .navbar h2 {
-          font-size: 1.1em;
+          font-size: 1.2rem;
         }
         .navbar-btns {
           width: 100%;
           justify-content: space-between;
         }
+        .navbar button {
+          min-width: auto;
+          padding: 10px 12px;
+          font-size: 0.9rem;
+        }
         .content-left,
         .content-right {
           position: static;
-          width: 100vw;
+          width: calc(100% - 24px);
           height: auto;
           min-height: 0;
-          max-height: 220px;
-          flex-direction: row;
+          max-height: 240px;
+          flex-direction: column;
           align-items: flex-start;
-          border-radius: 0;
-          box-shadow: none;
-          padding: 10px 4vw 10px 4vw;
-          margin-bottom: 8px;
+          border-radius: 16px;
+          margin: 12px auto;
+          padding: 16px;
           overflow-x: auto;
           overflow-y: hidden;
         }
         .sidebar-title,
         .sidebar-content {
-          max-width: 90vw;
+          max-width: 100%;
         }
         main {
           padding: 8px 2vw 0 2vw;
         }
+      }
+      @media (max-width: 480px) {
+        body {
+          padding-top: 80px;
+        }
+        .navbar {
+          padding: 8px 4vw;
+        }
+        .navbar h2 {
+          font-size: 1.1rem;
+        }
+        .navbar button {
+          padding: 8px 10px;
+          min-width: 70px;
+        }
+        .content {
+          margin-bottom: 16px;
+        }
+      }
+      
+      /* --- ACCESIBILIDAD --- */
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+      
+      :focus-visible {
+        outline: 2px solid var(--primary-500);
+        outline-offset: 2px;
       }
     </style>
 </head>
@@ -296,20 +430,50 @@
     <div class="navbar">
         <h2>Preview program</h2>
         <div class="navbar-btns">
-            <button id="btnReportes" class="active">Reportes</button>
-            <button id="btnNodos">Nodos</button>
-            <button id="btnMenu">Menu</button>
+            <button id="btnReportes" class="active" aria-pressed="true">
+              <span class="sr-only">Ver</span>Reportes
+            </button>
+            <button id="btnNodos" aria-pressed="false">
+              <span class="sr-only">Ver</span>Nodos
+            </button>
+            <button id="btnMenu" aria-pressed="false">
+              <span class="sr-only>Abrir</span>Menu
+            </button>
         </div>
     </div>
     <div class="content-left" id="sidebar-info">
-        <span class="sidebar-title">Información</span>
+        <span class="sidebar-title">Información del Sistema</span>
         <div class="sidebar-content" id="sidebarContent">
-            </div>
+          <p>Este panel muestra información detallada sobre el nodo seleccionado y el estado del sistema.</p>
+          <p><strong>Estado actual:</strong> <span id="systemStatus">Operativo</span></p>
+          <p><strong>Última actualización:</strong> <span id="lastUpdate">2023-11-15 14:30</span></p>
+          <p><strong>Nodos activos:</strong> <span id="activeNodes">8/10</span></p>
+        </div>
     </div>
     <div class="content-right" id="sidebar-nodes">
-        <span class="sidebar-title" id="sidebarTitle">Reportes</span>
+        <span class="sidebar-title" id="sidebarTitle">Nodos de Monitoreo</span>
         <div class="node-list" id="nodeList">
-            </div>
+          <button class="node-btn status-activo" aria-label="Nodo 1 - Activo">
+            <span class="node-title">Nodo Central</span>
+            <span class="node-info">Ubicación: Edificio A, Piso 3</span>
+            <div class="node-status" aria-hidden="true"></div>
+          </button>
+          <button class="node-btn status-activo" aria-label="Nodo 2 - Activo">
+            <span class="node-title">Nodo Este</span>
+            <span class="node-info">Ubicación: Edificio B, Piso 1</span>
+            <div class="node-status" aria-hidden="true"></div>
+          </button>
+          <button class="node-btn status-inactivo" aria-label="Nodo 3 - Inactivo">
+            <span class="node-title">Nodo Oeste</span>
+            <span class="node-info">Ubicación: Edificio C, Piso 2</span>
+            <div class="node-status" aria-hidden="true"></div>
+          </button>
+          <button class="node-btn status-mantenimiento" aria-label="Nodo 4 - En mantenimiento">
+            <span class="node-title">Nodo Sur</span>
+            <span class="node-info">Ubicación: Edificio D, Piso 1</span>
+            <div class="node-status" aria-hidden="true"></div>
+          </button>
+        </div>
     </div>
     <main>
         <div class="content">
@@ -317,17 +481,15 @@
             width: 100%;
             height: 85vh;
             min-height: 220px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            box-shadow: var(--neumorphic-inset);
           "></div>
         </div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.0/dist/ol.js"></script>
-
     <script src="app.js"></script>
 
 </body>
