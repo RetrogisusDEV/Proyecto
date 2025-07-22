@@ -104,5 +104,15 @@
       "timeout": 1800,
       "activeModules": ["dashboard", "map", "reports"]
     }
+  },
+  "userLogin": {
+    "username": "",
+    "password":"",
+    "isBlocked": false,
+    "is2FAEnabled": true,
+    "lastLogin": "2023-01-01T00:00:00Z"
+  },
+  "reports": {
+    
   }
 }
