@@ -2,7 +2,7 @@ name: Build Windows App
 on:
   push:
     paths:
-      - 'main_windows.py'
+      - 'windows/main_windows.py'
       - 'index.html'
       - 'requirements.txt'
       - '.github/workflows/windows-app.yml'

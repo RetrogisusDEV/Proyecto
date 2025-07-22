@@ -2,7 +2,7 @@ name: Build Android App
 on:
   push:
     paths:
-      - 'main_android.py'
+      - 'android/main_android.py'
       - 'index.html'
       - 'requirements.txt'
       - '.github/workflows/android-app.yml'
