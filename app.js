@@ -2,21 +2,15 @@
 // 1. CONFIGURACIÓN DE FIREBASE
 // REEMPLAZA ESTOS VALORES CON TUS PROPIAS CREDENCIALES
 // =================================================================
-const firebaseConfig = {
-    apiKey: "AIzaSyByBawppJfWRPzFVgOhuxK_KWPGbTCjxkE",
-    authDomain: "starnet-report-program.firebaseapp.com",
-    databaseURL: "https://starnet-report-program-default-rtdb.firebaseio.com", // ¡Importante! Asegúrate que sea la URL de Realtime Database
-    projectId: "starnet-report-program",
-    storageBucket: "starnet-report-program.firebasestorage.app",
-    messagingSenderId: "837993869502",
-    appId: "1:837993869502:web:eb183b3041378ea40aeeef",
-  };
-  
-  // =================================================================
-  // 2. INICIALIZACIÓN DE LA APP Y SERVICIOS
-  // =================================================================
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+fetch('firebase.config.json')
+  .then(response => response.json())
+  .then(firebaseConfig => {
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+   })
+  .catch(error => {
+    console.error('Error cargando la configuración de Firebase:', error);
+  });
   
   // =================================================================
   // 3. REFERENCIAS A ELEMENTOS DEL DOM
