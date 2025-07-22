@@ -22,7 +22,7 @@ jobs:
           pip install pywebview
       - name: Lint main_windows.py
         run: |
-          python -m py_compile main_windows.py
+          python -m py_compile windows/main_windows.py
       - name: Package with PyInstaller
         run: |
           pip install pyinstaller
