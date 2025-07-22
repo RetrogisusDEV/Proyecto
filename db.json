@@ -61,7 +61,7 @@
     ]
   },
   "system": {
-    "apiVersion": "1.3.0",
+    "apiVersion": "1.0.0",
     "lastUpdate": "2023-01-01T00:00:00Z",
     "isRecaptchaActive": true,
     "isUnderMaintenance": false,
@@ -111,8 +111,5 @@
     "isBlocked": false,
     "is2FAEnabled": true,
     "lastLogin": "2023-01-01T00:00:00Z"
-  },
-  "reports": {
-    
   }
 }

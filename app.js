@@ -1,20 +1,23 @@
-// =================================================================
-// 1. CONFIGURACIÓN DE FIREBASE
-// REEMPLAZA ESTOS VALORES CON TUS PROPIAS CREDENCIALES
-// =================================================================
-fetch('firebase.config.json')
-  .then(response => response.json())
-  .then(firebaseConfig => {
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-   })
-  .catch(error => {
-    console.error('Error cargando la configuración de Firebase:', error);
-  });
-  
-  // =================================================================
-  // 3. REFERENCIAS A ELEMENTOS DEL DOM
-  // =================================================================
+// Agrega el import de Firebase (si usas módulos)
+// import { initializeApp } from "firebase/app";
+// import { getDatabase, ref, onValue } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyByBawppJfWRPzFVgOhuxK_KWPGbTCjxkE",
+  authDomain: "starnet-report-program.firebaseapp.com",
+  databaseURL: "https://starnet-report-program-default-rtdb.firebaseio.com",
+  projectId: "starnet-report-program",
+  storageBucket: "starnet-report-program.firebasestorage.app",
+  messagingSenderId: "837993869502",
+  appId: "1:837993869502:web:eb183b3041378ea40aeeef"
+};
+
+// 1. Corrige la inicialización de Firebase
+const app = firebase.initializeApp(firebaseConfig); // Usa el objeto firebase global
+const database = firebase.database(); // Obtiene la referencia a la base de datos
+
+function initApp(db) {  // Recibe la instancia de la base de datos
+  // Referencias DOM
   const btns = {
     reportes: document.getElementById("btnReportes"),
     nodos: document.getElementById("btnNodos"),
@@ -24,150 +27,124 @@ fetch('firebase.config.json')
   const sidebarContent = document.getElementById("sidebarContent");
   const nodeList = document.getElementById("nodeList");
   
-  // =================================================================
-  // 4. ESTADO DE LA APLICACIÓN Y DATOS
-  // =================================================================
-  let allNodes = []; // Almacenará los nodos de Firebase
-  let activeSection = "Reportes"; // Mantiene la sección activa
+  // Estado de la aplicación
+  let allNodes = [];
+  let activeSection = "Reportes";
   
-  // Contenido estático para las barras laterales
+  // Contenido estático
   const sidebarContents = {
     Reportes: {
       title: "Reportes",
       html: `<div class='sidebar-content'>
-        <span style='color:#333;font-size:1.1em;'>Aquí puedes ver y generar reportes del sistema.</span><br>
-        <span style='color:#333;font-size:1.1em;'>Selecciona un nodo para ver detalles específicos.</span>
+        <span>Aquí puedes ver y generar reportes del sistema.</span><br>
+        <span>Selecciona un nodo para ver detalles específicos.</span>
       </div>`,
     },
     Nodos: {
       title: "Nodos",
       html: `<div class='sidebar-content'>
-        <span style='color:#333;font-size:1.1em;'>Listado de nodos registrados en el sistema.</span><br>
-        <span style='color:#333;font-size:1.1em;'>Haz clic en un nodo para ver más información.</span>
+        <span>Listado de nodos registrados en el sistema.</span><br>
+        <span>Haz clic en un nodo para ver más información.</span>
       </div>`,
     },
     Menu: {
       title: "Menú",
       html: `<div class='sidebar-content'>
-        <span style='color:#333;font-size:1.1em;'>Opciones del sistema:</span>
-        <ul style='margin:8px 0 0 16px;padding:0;'><li>Configuración</li><li>Ayuda</li><li>Salir</li></ul>
+        <span>Opciones del sistema:</span>
+        <ul><li>Configuración</li><li>Ayuda</li><li>Salir</li></ul>
       </div>`,
       nodeList: `<button class='node-btn'><span class='node-title'>Configuración</span></button>
                  <button class='node-btn'><span class='node-title'>Ayuda</span></button>
                  <button class='node-btn'><span class='node-title'>Salir</span></button>`,
     },
   };
-  
-  // =================================================================
-  // 5. LÓGICA DE RENDERIZADO Y MANIPULACIÓN DEL DOM
-  // =================================================================
-  
-  /**
-   * Devuelve la clase CSS correspondiente al estado del nodo.
-   * @param {string} estado - El estado del nodo ("Activo", "Inactivo", "Mantenimiento").
-   * @returns {string} - La clase CSS.
-   */
-  function getNodeStatusClass(estado) {
-    switch (estado) {
-      case "Activo":
-        return "status-activo";
-      case "Inactivo":
-        return "status-inactivo";
-      case "Mantenimiento":
-        return "status-mantenimiento";
-      default:
-        return "";
-    }
+
+  // Clase CSS según estado del nodo
+  function getNodeStatusClass(status) {
+    const estados = {
+      "active": "status-activo",
+      "inactive": "status-inactivo",
+      "maintenance": "status-mantenimiento"
+    };
+    return estados[status] || "";
   }
-  
-  /**
-   * Renderiza la lista de nodos en la barra lateral derecha.
-   * @param {Array} nodesToRender - El array de nodos a mostrar.
-   */
-  function renderNodeList(nodesToRender) {
-    if (!nodesToRender || nodesToRender.length === 0) {
+
+  // Renderiza lista de nodos
+  function renderNodeList(nodes) {
+    if (!nodes || nodes.length === 0) {
       nodeList.innerHTML = "<span class='node-info'>No hay nodos para mostrar.</span>";
       return;
     }
     
-    nodeList.innerHTML = nodesToRender
-      .map(node => {
-          const statusClass = getNodeStatusClass(node.Estado);
-          return `<button class='node-btn ${statusClass}'>
-                    <span class='node-title'>${node.ID_nodo}</span>
-                    <span class='node-info'>Cajas: ${node.Cantidad_cajas} | Estado: ${node.Estado}</span>
-                  </button>`;
-      })
-      .join("");
+    nodeList.innerHTML = nodes.map(node => {
+      const statusClass = getNodeStatusClass(node.status);
+      return `<button class='node-btn ${statusClass}'>
+                <span class='node-title'>${node.nodeId}</span>
+                <span class='node-info'>Ubicación: ${node.location}</span>
+                <span class='node-info'>Cajas: ${node.boxCount}/${node.capacity}</span>
+                <span class='node-info'>Estado: ${node.status}</span>
+              </button>`;
+    }).join("");
   }
-  
-  /**
-   * Actualiza la interfaz para mostrar la sección seleccionada.
-   * @param {string} sectionName - El nombre de la sección ("Reportes", "Nodos", "Menu").
-   */
+
+  // Actualiza sección activa
   function setActiveSection(sectionName) {
     activeSection = sectionName;
-  
-    // Actualizar clase 'active' en los botones de navegación
+    
+    // Actualiza botones
     Object.values(btns).forEach(btn => btn.classList.remove("active"));
-    if (btns[sectionName.toLowerCase()]) {
-      btns[sectionName.toLowerCase()].classList.add("active");
-    }
-  
-    // Actualizar contenido de las barras laterales
+    const btnKey = sectionName.toLowerCase();
+    if (btns[btnKey]) btns[btnKey].classList.add("active");
+    
+    // Actualiza contenido
     const content = sidebarContents[sectionName];
     sidebarTitle.textContent = content.title;
     sidebarContent.innerHTML = content.html;
-  
-    if (sectionName === "Menu") {
-      nodeList.innerHTML = content.nodeList;
-    } else {
-      renderNodeList(allNodes); // Renderiza los nodos de Firebase para Reportes y Nodos
-    }
+    
+    // Para menú usa contenido estático, de lo contrario nodos de Firebase
+    sectionName === "Menu" 
+      ? nodeList.innerHTML = content.nodeList
+      : renderNodeList(allNodes);
   }
-  
-  // =================================================================
-  // 6. LÓGICA DE FIREBASE Y EVENTOS
-  // =================================================================
-  
-  // Escuchar cambios en la referencia 'nodos' de la base de datos
-  const nodesRef = database.ref('nodos');
+
+  // 2. Corrige la referencia a la base de datos usando el parámetro
+  const nodesRef = db.ref('central/fiberService/cabinets');
   nodesRef.on('value', (snapshot) => {
     const data = snapshot.val();
-    // Convertir el objeto de Firebase a un array de nodos
-    allNodes = data ? Object.keys(data).map(key => ({ ID_nodo: key, ...data[key] })) : [];
+    allNodes = data ? Object.keys(data).map(key => ({
+      id: key,
+      ...data[key]
+    })) : [];
     
-    console.log("Datos recibidos de Firebase:", allNodes);
-    
-    // Volver a renderizar la sección activa con los datos actualizados
-    setActiveSection(activeSection);
+    console.log("Nodos recibidos:", allNodes);
+    setActiveSection(activeSection);  // Actualiza la vista con nuevos datos
   }, (error) => {
-    console.error("Error al leer datos de Firebase:", error);
-    nodeList.innerHTML = "<span class='node-info' style='color:red;'>Error al conectar con la base de datos.</span>";
+    console.error("Error leyendo datos:", error);
+    nodeList.innerHTML = "<span class='node-info' style='color:red;'>Error en conexión con base de datos.</span>";
   });
-  
-  // Asignar eventos a los botones de navegación
-  btns.reportes.onclick = () => setActiveSection("Reportes");
-  btns.nodos.onclick = () => setActiveSection("Nodos");
-  btns.menu.onclick = () => setActiveSection("Menu");
-  
-  // =================================================================
-  // 7. INICIALIZACIÓN DEL MAPA (OpenLayers)
-  // =================================================================
-  document.addEventListener("DOMContentLoaded", function () {
+
+  // 3. Corrige los manejadores de eventos
+  btns.reportes.addEventListener('click', () => setActiveSection("Reportes"));
+  btns.nodos.addEventListener('click', () => setActiveSection("Nodos"));
+  btns.menu.addEventListener('click', () => setActiveSection("Menu"));
+
+  // 4. Verifica si OpenLayers está cargado antes de crear el mapa
+  if (window.ol) {
     const map = new ol.Map({
       target: "map",
-      layers: [
-        new ol.layer.Tile({
-          source: new ol.source.OSM(),
-        }),
-      ],
+      layers: [new ol.layer.Tile({ source: new ol.source.OSM() })],
       view: new ol.View({
         center: ol.proj.fromLonLat([-66.2442, 9.8606]), // Altagracia de Orituco
         zoom: 14,
       }),
     });
-  
-    // Inicializa la vista con la sección de Reportes
-    setActiveSection("Reportes");
-  });
+  } else {
+    console.error("OpenLayers no está cargado");
+  }
+
+  // Inicializa vista
+  setActiveSection("Reportes");
+}
+
+// 5. Inicializa la app con la base de datos
+initApp(database);
