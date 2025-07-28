@@ -1,52 +1,24 @@
 /* ========================================
    VARIABLES CSS PERSONALIZADAS
 ======================================== */
-/* ========================================
-   VARIABLES CSS PERSONALIZADAS
-======================================== */
 :root {
   /* Colores principales con mejor contraste */
   --primary-gradient: linear-gradient(135deg, #4c63d2 0%, #5b47a3 100%);
   --primary-light: linear-gradient(135deg, #8b9cff 0%, #b19eff 100%);
   --secondary-gradient: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
   --accent-gradient: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
-  /* Colores principales con mejor contraste */
-  --primary-gradient: linear-gradient(135deg, #4c63d2 0%, #5b47a3 100%);
-  --primary-light: linear-gradient(135deg, #8b9cff 0%, #b19eff 100%);
-  --secondary-gradient: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
-  --accent-gradient: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
 
   /* Estados con mejor contraste */
   --active-gradient: linear-gradient(135deg, #4c63d2 0%, #5b47a3 100%);
   --hover-gradient: linear-gradient(135deg, #8b9cff 0%, #b19eff 100%);
-  /* Estados con mejor contraste */
-  --active-gradient: linear-gradient(135deg, #4c63d2 0%, #5b47a3 100%);
-  --hover-gradient: linear-gradient(135deg, #8b9cff 0%, #b19eff 100%);
 
-  /* Texto mejorado para contraste WCAG AA */
-  --text-primary: #1a202c;
-  --text-secondary: #2d3748;
   /* Texto mejorado para contraste WCAG AA */
   --text-primary: #1a202c;
   --text-secondary: #2d3748;
   --text-contrast: #ffffff;
   --text-muted: #4a5568;
   --text-light: #718096;
-  --text-muted: #4a5568;
-  --text-light: #718096;
 
-  /* Estados de nodos con mejor contraste */
-  --status-active: #059669;
-  --status-active-bg: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
-  --status-active-text: #064e3b;
-  
-  --status-inactive: #6b7280;
-  --status-inactive-bg: linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%);
-  --status-inactive-text: #374151;
-  
-  --status-maintenance: #d97706;
-  --status-maintenance-bg: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-  --status-maintenance-text: #92400e;
   /* Estados de nodos con mejor contraste */
   --status-active: #059669;
   --status-active-bg: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
@@ -65,17 +37,7 @@
   --bg-card: rgba(255, 255, 255, 0.98);
   --bg-sidebar: rgba(255, 255, 255, 0.95);
   --bg-overlay: rgba(0, 0, 0, 0.5);
-  --bg-primary: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  --bg-card: rgba(255, 255, 255, 0.98);
-  --bg-sidebar: rgba(255, 255, 255, 0.95);
-  --bg-overlay: rgba(0, 0, 0, 0.5);
 
-  /* Sombras Material Design mejoradas */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
-  --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.2);
   /* Sombras Material Design mejoradas */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
@@ -86,18 +48,12 @@
   /* Bordes */
   --border-radius-xs: 4px;
   --border-radius-sm: 8px;
-  --border-radius-xs: 4px;
-  --border-radius-sm: 8px;
   --border-radius: 12px;
   --border-radius-lg: 16px;
   --border-radius-xl: 24px;
   --border-color: rgba(203, 213, 225, 0.7);
   --border-focus: #4c63d2;
-  --border-radius-xl: 24px;
-  --border-color: rgba(203, 213, 225, 0.7);
-  --border-focus: #4c63d2;
 
-  /* Espaciado consistente */
   /* Espaciado consistente */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -131,46 +87,15 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  --spacing-3xl: 64px;
-
-  /* Transiciones */
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Z-index system */
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-modal-backdrop: 1040;
-  --z-modal: 1050;
-  --z-popover: 1060;
-  --z-tooltip: 1070;
-}
-
-/* ========================================
-   RESET Y BASE
-======================================== */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 html {
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
                "Helvetica Neue", Arial, sans-serif;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
-               "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
-  line-height: 1.5;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
   text-rendering: optimizeLegibility;
   scroll-behavior: smooth;
 }
@@ -179,39 +104,12 @@ body {
   background: var(--bg-primary);
   color: var(--text-primary);
   min-height: 100vh;
-  color: var(--text-primary);
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   padding-top: 80px;
   overflow-x: hidden;
-  overflow-x: hidden;
 }
 
-/* ========================================
-   UTILITIES
-======================================== */
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
-
-.text-truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ========================================
-   BARRA DE NAVEGACIÓN
-======================================== */
 /* ========================================
    UTILITIES
 ======================================== */
@@ -246,17 +144,7 @@ body {
   color: var(--text-contrast);
   padding: var(--spacing-md) min(8vw, var(--spacing-2xl));
   border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-  z-index: var(--z-fixed);
-  background: var(--primary-gradient);
-  color: var(--text-contrast);
-  padding: var(--spacing-md) min(8vw, var(--spacing-2xl));
-  border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
   box-shadow: var(--shadow-lg);
-  backdrop-filter: blur(20px);
-  
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   backdrop-filter: blur(20px);
   
   display: flex;
@@ -264,16 +152,12 @@ body {
   justify-content: space-between;
   gap: var(--spacing-md);
   min-height: 80px;
-  min-height: 80px;
 }
 
 .navbar h2 {
   font-size: clamp(1.25rem, 2.5vw, 1.5rem);
-  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   font-weight: 700;
   letter-spacing: -0.025em;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  flex: 1;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   flex: 1;
   min-width: 0;
@@ -286,12 +170,8 @@ body {
   display: flex;
   gap: var(--spacing-xs);
   background: rgba(255, 255, 255, 0.15);
-  gap: var(--spacing-xs);
-  background: rgba(255, 255, 255, 0.15);
   padding: var(--spacing-xs);
   border-radius: var(--border-radius);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -299,18 +179,12 @@ body {
 .navbar button {
   background: transparent;
   color: rgba(255, 255, 255, 0.9);
-  color: rgba(255, 255, 255, 0.9);
   border: none;
-  font-size: 0.9rem;
   font-size: 0.9rem;
   font-weight: 500;
   font-family: inherit;
-  font-family: inherit;
   cursor: pointer;
   padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: var(--border-radius-sm);
-  transition: all var(--transition-normal);
-  min-width: 80px;
   border-radius: var(--border-radius-sm);
   transition: all var(--transition-normal);
   min-width: 80px;
@@ -322,15 +196,11 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  inset: 0;
   background: rgba(255, 255, 255, 0.1);
   opacity: 0;
   transition: opacity var(--transition-fast);
-  transition: opacity var(--transition-fast);
 }
 
-.navbar button:hover::before,
-.navbar button:focus-visible::before {
 .navbar button:hover::before,
 .navbar button:focus-visible::before {
   opacity: 1;
@@ -339,11 +209,6 @@ body {
 .navbar button:hover {
   transform: translateY(-1px);
   color: var(--text-contrast);
-}
-
-.navbar button:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.5);
-  outline-offset: 2px;
 }
 
 .navbar button:focus-visible {
@@ -366,21 +231,9 @@ body {
    BARRAS LATERALES
 ======================================== */
 .sidebar-base {
-.navbar button.active {
-  background: rgba(255, 255, 255, 0.25);
-  color: var(--text-contrast);
-  box-shadow: var(--shadow-sm);
-  font-weight: 600;
-}
-
-/* ========================================
-   BARRAS LATERALES
-======================================== */
-.sidebar-base {
   position: fixed;
   top: 80px;
   height: calc(100vh - 80px);
-  width: 300px;
   width: 300px;
   background: var(--bg-sidebar);
   backdrop-filter: blur(20px);
@@ -388,18 +241,10 @@ body {
   box-shadow: var(--shadow-md);
   z-index: var(--z-sticky);
   
-  box-shadow: var(--shadow-md);
-  z-index: var(--z-sticky);
-  
   display: flex;
   flex-direction: column;
   padding: var(--spacing-lg);
-  padding: var(--spacing-lg);
   gap: var(--spacing-md);
-  overflow-y: auto;
-  overflow-x: hidden;
-  
-  transition: transform var(--transition-normal);
   overflow-y: auto;
   overflow-x: hidden;
   
@@ -426,8 +271,6 @@ body {
   font-weight: 700;
   font-size: 1.375rem;
   line-height: 1.2;
-  font-size: 1.375rem;
-  line-height: 1.2;
   margin-bottom: var(--spacing-sm);
   color: var(--text-primary);
   background: var(--secondary-gradient);
@@ -442,13 +285,8 @@ body {
   color: var(--text-secondary);
   line-height: 1.6;
   animation: fadeIn var(--transition-slow) ease-out;
-  line-height: 1.6;
-  animation: fadeIn var(--transition-slow) ease-out;
 }
 
-/* ========================================
-   LISTA DE NODOS
-======================================== */
 /* ========================================
    LISTA DE NODOS
 ======================================== */
@@ -464,18 +302,13 @@ body {
   width: 100%;
   padding: var(--spacing-md);
   border: 2px solid var(--border-color);
-  border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
   background: var(--bg-card);
-  background: var(--bg-card);
   font-size: 1rem;
-  font-family: inherit;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: all var(--transition-normal);
-  
   transition: all var(--transition-normal);
   
   display: flex;
@@ -483,13 +316,8 @@ body {
   align-items: flex-start;
   gap: var(--spacing-xs);
   
-  gap: var(--spacing-xs);
-  
   position: relative;
   overflow: hidden;
-  outline: none;
-  
-  animation: fadeIn var(--transition-normal) ease-out;
   outline: none;
   
   animation: fadeIn var(--transition-normal) ease-out;
@@ -515,25 +343,12 @@ body {
 .node-btn:focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
-  transition: opacity var(--transition-normal);
 }
 
-.node-btn:hover::before,
-.node-btn:focus-visible::before {
-  opacity: 1;
-}
-
-.node-btn:focus-visible {
-  outline: 2px solid var(--border-focus);
-  outline-offset: 2px;
-}
-
-/* Estados de nodos con mejor contraste */
 /* Estados de nodos con mejor contraste */
 .node-btn.status-activo {
   background: var(--status-active-bg);
   border-color: var(--status-active);
-  color: var(--status-active-text);
   color: var(--status-active-text);
 }
 
@@ -543,7 +358,6 @@ body {
 
 .node-btn.status-activo:hover {
   background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
-  background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
@@ -551,7 +365,6 @@ body {
 .node-btn.status-inactivo {
   background: var(--status-inactive-bg);
   border-color: var(--status-inactive);
-  color: var(--status-inactive-text);
   color: var(--status-inactive-text);
 }
 
@@ -561,17 +374,14 @@ body {
 
 .node-btn.status-inactivo:hover {
   background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  color: var(--text-contrast);
   color: var(--text-contrast);
 }
 
 .node-btn.status-mantenimiento {
   background: var(--status-maintenance-bg);
   border-color: var(--status-maintenance);
-  color: var(--status-maintenance-text);
   color: var(--status-maintenance-text);
 }
 
@@ -580,7 +390,6 @@ body {
 }
 
 .node-btn.status-mantenimiento:hover {
-  background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
   background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
@@ -604,47 +413,31 @@ body {
 
 .node-btn:active {
   transform: translateY(-1px);
-  transform: translateY(-1px);
 }
 
-.node-title {
 .node-title {
   font-weight: 700;
   font-size: 1.125rem;
   line-height: 1.3;
-  font-size: 1.125rem;
-  line-height: 1.3;
   letter-spacing: -0.025em;
   color: inherit;
-  color: inherit;
 }
 
 .node-info {
   font-size: 0.875rem;
   line-height: 1.4;
-.node-info {
-  font-size: 0.875rem;
-  line-height: 1.4;
   color: inherit;
-  opacity: 0.85;
   opacity: 0.85;
 }
 
-/* ========================================
-   CONTENIDO PRINCIPAL
-======================================== */
 /* ========================================
    CONTENIDO PRINCIPAL
 ======================================== */
 main {
   flex: 1;
-  flex: 1;
   width: 100%;
   max-width: 1200px;
-  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-2xl);
-  
   padding: var(--spacing-xl) var(--spacing-md) var(--spacing-2xl);
   
   display: flex;
@@ -656,13 +449,8 @@ main {
 .content {
   width: 100%;
   min-height: 400px;
-  min-height: 400px;
   background: var(--bg-card);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--border-color);
-  backdrop-filter: blur(10px);
-  
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   backdrop-filter: blur(10px);
@@ -671,7 +459,6 @@ main {
   align-items: center;
   justify-content: center;
   
-  
   margin-bottom: var(--spacing-xl);
 }
 
@@ -679,101 +466,11 @@ main {
   width: 100%;
   height: 80vh;
   min-height: 400px;
-  height: 80vh;
-  min-height: 400px;
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
-/* ========================================
-   SCROLLBARS PERSONALIZADAS
-======================================== */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(241, 245, 249, 0.5);
-  border-radius: var(--border-radius-xs);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--primary-gradient);
-  border-radius: var(--border-radius-xs);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--secondary-gradient);
-}
-
-/* Firefox */
-.sidebar-base {
-  scrollbar-width: thin;
-  scrollbar-color: #4c63d2 rgba(241, 245, 249, 0.5);
-}
-
-/* ========================================
-   ANIMACIONES
-======================================== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.content-left {
-  animation: slideInLeft var(--transition-slow) ease-out;
-}
-
-.content-right {
-  animation: slideInRight var(--transition-slow) ease-out;
-}
-
-/* ========================================
-   RESPONSIVE DESIGN
-======================================== */
-
-/* Large screens */
-@media (min-width: 1440px) {
-  .sidebar-base {
-    width: 320px;
-  }
-  
-  main {
-    max-width: 1400px;
-  }
-}
-
-/* Medium-large screens */
 /* ========================================
    SCROLLBARS PERSONALIZADAS
 ======================================== */
@@ -865,10 +562,7 @@ main {
 @media (max-width: 1200px) {
   .sidebar-base {
     width: 280px;
-  .sidebar-base {
-    width: 280px;
   }
-  
   
   main {
     max-width: 95vw;
@@ -877,22 +571,14 @@ main {
 
 /* Medium screens */
 @media (max-width: 992px) {
-/* Medium screens */
-@media (max-width: 992px) {
   .navbar {
     padding: var(--spacing-md) var(--spacing-lg);
-    padding: var(--spacing-md) var(--spacing-lg);
   }
   
   .sidebar-base {
     width: 260px;
     padding: var(--spacing-lg) var(--spacing-md);
-  
-  .sidebar-base {
-    width: 260px;
-    padding: var(--spacing-lg) var(--spacing-md);
   }
-  
   
   main {
     max-width: 96vw;
@@ -900,12 +586,7 @@ main {
 }
 
 /* Small-medium screens */
-/* Small-medium screens */
 @media (max-width: 768px) {
-  body {
-    padding-top: 70px;
-  }
-  
   body {
     padding-top: 70px;
   }
@@ -913,19 +594,13 @@ main {
   .navbar {
     min-height: 70px;
     padding: var(--spacing-md) var(--spacing-lg);
-    min-height: 70px;
-    padding: var(--spacing-md) var(--spacing-lg);
   }
-  
   
   .navbar h2 {
     font-size: 1.25rem;
-    font-size: 1.25rem;
   }
   
-  
   .navbar button {
-    min-width: 70px;
     min-width: 70px;
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.85rem;
@@ -944,36 +619,7 @@ main {
   
   .node-title {
     font-size: 1rem;
-    font-size: 0.85rem;
   }
-  
-  .sidebar-base {
-    top: 70px;
-    height: calc(100vh - 70px);
-    width: 240px;
-    padding: var(--spacing-md);
-  }
-  
-  .sidebar-title {
-    font-size: 1.25rem;
-  }
-  
-  .node-title {
-    font-size: 1rem;
-  }
-  
-  .node-info {
-    font-size: 0.8rem;
-  }
-  
-  #map {
-    height: 70vh;
-    min-height: 300px;
-  }
-}
-
-/* Mobile screens */
-@media (max-width: 640px) {
   
   .node-info {
     font-size: 0.8rem;
@@ -989,36 +635,25 @@ main {
 @media (max-width: 640px) {
   html {
     font-size: 14px;
-    font-size: 14px;
   }
-  
   
   body {
     padding-top: 140px; /* Increased for mobile navbar */
-    padding-top: 140px; /* Increased for mobile navbar */
   }
-  
   
   .navbar {
     flex-direction: column;
     align-items: stretch;
-    align-items: stretch;
     gap: var(--spacing-sm);
-    padding: var(--spacing-md);
     padding: var(--spacing-md);
     border-radius: 0 0 var(--border-radius) var(--border-radius);
     min-height: 140px;
-    min-height: 140px;
   }
-  
   
   .navbar h2 {
     font-size: 1.125rem;
     text-align: center;
-    font-size: 1.125rem;
-    text-align: center;
   }
-  
   
   .navbar-btns {
     width: 100%;
@@ -1031,15 +666,6 @@ main {
     font-size: 0.8rem;
   }
   
-  .navbar button {
-    flex: 1;
-    min-width: auto;
-    font-size: 0.8rem;
-  }
-  
-  /* Transform sidebars to horizontal scrollable sections */
-  .sidebar-base {
-  
   /* Transform sidebars to horizontal scrollable sections */
   .sidebar-base {
     position: relative;
@@ -1048,20 +674,12 @@ main {
     height: auto;
     max-height: 200px;
     
-    max-height: 200px;
-    
     flex-direction: row;
-    align-items: flex-start;
-    
     align-items: flex-start;
     
     border-radius: 0;
     border: none;
     border-bottom: 1px solid var(--border-color);
-    box-shadow: none;
-    
-    padding: var(--spacing-lg) var(--spacing-md);
-    margin-bottom: var(--spacing-md);
     box-shadow: none;
     
     padding: var(--spacing-lg) var(--spacing-md);
@@ -1075,46 +693,26 @@ main {
     animation: fadeIn var(--transition-normal) ease-out;
   }
   
-  .content-left,
-  .content-right {
-    animation: fadeIn var(--transition-normal) ease-out;
-  }
-  
-  
   .sidebar-title {
     position: absolute;
-    top: var(--spacing-md);
     top: var(--spacing-md);
     left: var(--spacing-md);
     font-size: 1.125rem;
     white-space: nowrap;
-    font-size: 1.125rem;
-    white-space: nowrap;
   }
-  
   
   .node-list {
     flex-direction: row;
     margin-top: var(--spacing-2xl);
     padding-bottom: var(--spacing-sm);
     gap: var(--spacing-md);
-    margin-top: var(--spacing-2xl);
-    padding-bottom: var(--spacing-sm);
-    gap: var(--spacing-md);
   }
-  
   
   .node-btn {
     min-width: 180px;
     flex-shrink: 0;
     padding: var(--spacing-sm) var(--spacing-md);
-    min-width: 180px;
-    flex-shrink: 0;
-    padding: var(--spacing-sm) var(--spacing-md);
   }
-  
-  .node-title {
-    font-size: 0.95rem;
   
   .node-title {
     font-size: 0.95rem;
@@ -1122,28 +720,18 @@ main {
   
   .node-info {
     font-size: 0.75rem;
-  
-  .node-info {
-    font-size: 0.75rem;
   }
-  
   
   main {
     padding: var(--spacing-md) var(--spacing-sm) var(--spacing-xl);
-    padding: var(--spacing-md) var(--spacing-sm) var(--spacing-xl);
   }
-  
   
   .content {
     margin-bottom: var(--spacing-lg);
     border-radius: var(--border-radius);
-    margin-bottom: var(--spacing-lg);
-    border-radius: var(--border-radius);
   }
   
-  
   #map {
-    height: 60vh;
     height: 60vh;
     min-height: 250px;
   }
@@ -1194,51 +782,6 @@ main {
 .empty-state h3 {
   margin-bottom: var(--spacing-sm);
   color: var(--text-secondary);
-/* Small mobile screens */
-@media (max-width: 480px) {
-  .navbar {
-    padding: var(--spacing-sm);
-  }
-  
-  .node-btn {
-    min-width: 160px;
-  }
-  
-  .sidebar-base {
-    padding: var(--spacing-md) var(--spacing-sm);
-  }
-  
-  #map {
-    height: 55vh;
-    min-height: 200px;
-  }
-}
-
-/* ========================================
-   ESTADOS DE CARGA Y VACÍO
-======================================== */
-.loading-state {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-2xl);
-  color: var(--text-muted);
-  font-style: italic;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-2xl);
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.empty-state h3 {
-  margin-bottom: var(--spacing-sm);
-  color: var(--text-secondary);
 }
 
 /* ========================================
@@ -1252,44 +795,7 @@ main {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-/* ========================================
-   ACCESIBILIDAD
-======================================== */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text-primary: #f7fafc;
-    --text-secondary: #e2e8f0;
-    --text-muted: #a0aec0;
-    --bg-primary: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-    --bg-card: rgba(45, 55, 72, 0.95);
-    --bg-sidebar: rgba(26, 32, 44, 0.95);
-    --border-color: rgba(74, 85, 104, 0.6);
-  }
-}
-
-/* High contrast mode */
-@media (prefers-contrast: high) {
-  :root {
-    --text-primary: #000000;
-    --text-secondary: #000000;
-    --text-contrast: #ffffff;
-    --border-color: #000000;
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
-  }
-}
 }
 
 @media (prefers-color-scheme: dark) {
