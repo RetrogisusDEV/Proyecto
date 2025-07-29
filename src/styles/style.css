@@ -1,3 +1,29 @@
+/* ======== LAYOUT PC: sidebars y mapa centrado ======== */
+@media (min-width: 1200px) {
+  main {
+    display: grid !important;
+    grid-template-columns: 300px 1fr 300px;
+    grid-template-areas: "left center right";
+    align-items: stretch;
+    gap: var(--spacing-lg);
+    min-height: 600px;
+  }
+  .content-left {
+    grid-area: left;
+    position: relative;
+    z-index: 1;
+  }
+  .content {
+    grid-area: center;
+    width: 100%;
+    min-width: 0;
+  }
+  .content-right {
+    grid-area: right;
+    position: relative;
+    z-index: 1;
+  }
+}
 /* ========================================
    VARIABLES CSS PERSONALIZADAS
 ======================================== */
@@ -161,7 +187,7 @@ body {
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   flex: 1;
   min-width: 0;
-	display: flex;
+  display: flex;
    justify-content: space-around;
    align-items: center;
 }
@@ -255,7 +281,7 @@ body {
   left: 0;
   border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0;
   border-left: none;
-	padding-inline: 3vw;
+  padding-inline: 3vw;
    padding-block: 4vh;
 }
 
@@ -263,7 +289,7 @@ body {
   right: 0;
   border-radius: var(--border-radius-lg) 0 0 var(--border-radius-lg);
   border-right: none;
-	padding-inline: 3vw;
+  padding-inline: 3vw;
    padding-block: 4vh;
 }
 
