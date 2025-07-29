@@ -1,29 +1,3 @@
-/* ======== LAYOUT PC: sidebars y mapa centrado ======== */
-@media (min-width: 1200px) {
-  main {
-    display: grid !important;
-    grid-template-columns: 300px 1fr 300px;
-    grid-template-areas: "left center right";
-    align-items: stretch;
-    gap: var(--spacing-lg);
-    min-height: 600px;
-  }
-  .content-left {
-    grid-area: left;
-    position: relative;
-    z-index: 1;
-  }
-  .content {
-    grid-area: center;
-    width: 100%;
-    min-width: 0;
-  }
-  .content-right {
-    grid-area: right;
-    position: relative;
-    z-index: 1;
-  }
-}
 /* ========================================
    VARIABLES CSS PERSONALIZADAS
 ======================================== */
@@ -465,26 +439,25 @@ main {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-md) var(--spacing-2xl);
-  
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--spacing-xl);
 }
 
 .content {
-  width: 100%;
+  flex: 1 1 0;
+  min-width: 0;
   min-height: 400px;
   background: var(--bg-card);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border-color);
   backdrop-filter: blur(10px);
-  
   display: flex;
   align-items: center;
   justify-content: center;
-  
   margin-bottom: var(--spacing-xl);
 }
 
@@ -576,84 +549,117 @@ main {
 /* Large screens */
 @media (min-width: 1440px) {
   .sidebar-base {
-    width: 320px;
+    width: 340px;
   }
-  
   main {
-    max-width: 1400px;
+    max-width: 1500px;
+    gap: var(--spacing-2xl);
+  }
+  .content {
+    min-height: 500px;
+    font-size: 1.1rem;
   }
 }
 
 /* Medium-large screens */
 @media (max-width: 1200px) {
   .sidebar-base {
-    width: 280px;
+    width: 260px;
   }
-  
   main {
-    max-width: 95vw;
+    max-width: 98vw;
+    gap: var(--spacing-xl);
   }
 }
 
 /* Medium screens */
-@media (max-width: 992px) {
+@media (max-width: 720px) {
   .navbar {
-    padding: var(--spacing-md) var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-md);
+    min-height: 60px;
   }
-  
   .sidebar-base {
-    width: 260px;
-    padding: var(--spacing-lg) var(--spacing-md);
+    width: 100vw;
+    max-width: 100vw;
+    padding: var(--spacing-md);
+    position: static;
+    height: auto;
+    box-shadow: none;
+    border-radius: 0;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: var(--spacing-md);
   }
-  
   main {
-    max-width: 96vw;
+    max-width: 100vw;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+  .content {
+    width: 100%;
+    min-width: 0;
+    margin-bottom: var(--spacing-md);
+    min-height: 300px;
+    font-size: 0.98rem;
+    padding: var(--spacing-md);
+  }
+  .sidebar-title {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-xs);
+  }
+  .node-btn {
+    min-width: 140px;
+    font-size: 0.9rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  .navbar button {
+    min-width: 60px;
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 }
 
 /* Small-medium screens */
-@media (max-width: 768px) {
+@media (max-width: 540px) {
   body {
-    padding-top: 70px;
+    padding-top: 60px;
   }
-  
   .navbar {
-    min-height: 70px;
-    padding: var(--spacing-md) var(--spacing-lg);
+    min-height: 50px;
+    padding: var(--spacing-xs) var(--spacing-xs);
+    gap: var(--spacing-xs);
   }
-  
   .navbar h2 {
-    font-size: 1.25rem;
-  }
-  
-  .navbar button {
-    min-width: 70px;
-    padding: var(--spacing-sm) var(--spacing-md);
-    font-size: 0.85rem;
-  }
-  
-  .sidebar-base {
-    top: 70px;
-    height: calc(100vh - 70px);
-    width: 240px;
-    padding: var(--spacing-md);
-  }
-  
-  .sidebar-title {
-    font-size: 1.25rem;
-  }
-  
-  .node-title {
     font-size: 1rem;
   }
-  
-  .node-info {
-    font-size: 0.8rem;
+  .navbar button {
+    min-width: 48px;
+    font-size: 0.75rem;
+    padding: var(--spacing-xs);
   }
-  
+  .sidebar-base {
+    width: 100vw;
+    padding: var(--spacing-xs);
+    gap: var(--spacing-xs);
+  }
+  .sidebar-title {
+    font-size: 0.95rem;
+  }
+  .node-title {
+    font-size: 0.9rem;
+  }
+  .node-info {
+    font-size: 0.7rem;
+  }
   #map {
-    height: 70vh;
-    min-height: 300px;
+    height: 45vh;
+    min-height: 120px;
+  }
+  .content {
+    min-height: 180px;
+    font-size: 0.92rem;
+    padding: var(--spacing-xs);
   }
 }
 
