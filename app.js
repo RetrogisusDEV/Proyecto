@@ -1,7 +1,3 @@
-// Agrega el import de Firebase (si usas módulos)
-// import { initializeApp } from "firebase/app";
-// import { getDatabase, ref, onValue } from "firebase/database";
-
 const firebaseConfig = {
   apiKey: "AIzaSyByBawppJfWRPzFVgOhuxK_KWPGbTCjxkE",
   authDomain: "starnet-report-program.firebaseapp.com",
