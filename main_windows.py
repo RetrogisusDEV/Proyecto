@@ -2,16 +2,11 @@ import webview
 import os
 import sys
 
-# --- Función para iniciar la aplicación en Windows ---
 def start_windows_app():
-    """
-    Crea y muestra la ventana de la aplicación para Windows usando pywebview.
-    """
-    # Ruta absoluta al archivo index.html para asegurar que siempre se encuentre
+  
     base_dir = os.path.dirname(os.path.abspath(__file__))
     html_path = os.path.join(base_dir, "index.html")
 
-    # Verifica si el archivo HTML existe antes de intentar cargarlo
     if not os.path.exists(html_path):
         print(f"Error: No se encuentra el archivo 'index.html' en la ruta: {html_path}")
         return

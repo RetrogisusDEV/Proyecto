@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "meta.pyrefly",
+        "ms-python.black-formatter",
+        "usernamehw.errorlens",
+        "esbenp.prettier-vscode"
+    ]
+}
