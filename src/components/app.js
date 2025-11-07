@@ -1,4 +1,3 @@
-// Configuración de la aplicación
 const CONFIG = {
     FIREBASE: {
         apiKey: "AIzaSyByBawppJfWRPzFVgOhuxK_KWPGbTCjxkE",
@@ -13,33 +12,23 @@ const CONFIG = {
         NODES: 'starnetAppNodes',
         LAST_SYNC: 'starnetLastSync'
     },
-    // Sincronización eliminada, Firebase 'on' lo maneja
     MAP: {
-        DEFAULT_CENTER: [-66.2442, 9.8606], // Altagracia de Orituco
+        DEFAULT_CENTER: [-66.2442, 9.8606],
         DEFAULT_ZOOM: 14,
         MARKER_ICON: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNy41ODYgMiA0IDUuNTg2IDQgMTBDNCAxNC40MTQgNy41ODYgMTggMTIgMThDMTYuNDE0IDE4IDIwIDE0LjQxNCAyMCAxMEMyMCA1LjU4NiAxNi40MTQgMiAxMiAyWk0xMiAxMkMxMC44OTcgMTIgMTAgMTEuMTAzIDEwIDEwQzEwIDguODk3IDEwLjg5NyA4IDEyIDhDMTMuMTAzIDggMTQgOC44OTcgMTQgMTBDMTQgMTEuMTAzIDEzLjEwMyAxMiAxMiAxMloiIGZpbGw9IiMwMDc3YjYiLz4KPC9zdmc+'
     }
 };
 
-// Estado global de la aplicación
 class AppState {
     constructor() {
         this.nodes = [];
-        this.activeSection = 'Reportes'; // Sección inicial
+        this.activeSection = 'Reportes';
         this.isOnline = navigator.onLine;
         this.map = null;
         this.vectorSource = null;
     }
 }
 
-// ------------------------------------------
-// --- FUNCIONES DE UTILIDAD Y PERSISTENCIA ---
-// ------------------------------------------
-
-/**
- * Intenta cargar los nodos desde localStorage.
- * @returns {Array<Object>} Un array de nodos o un array vacío si falla.
- */
 function getNodesFromLocal() {
     try {
         const json = localStorage.getItem(CONFIG.STORAGE_KEYS.NODES);
@@ -50,10 +39,6 @@ function getNodesFromLocal() {
     }
 }
 
-/**
- * Guarda el array de nodos en localStorage.
- * @param {Array<Object>} nodes Los nodos a guardar.
- */
 function saveNodesToLocal(nodes) {
     try {
         localStorage.setItem(CONFIG.STORAGE_KEYS.NODES, JSON.stringify(nodes));
@@ -64,67 +49,52 @@ function saveNodesToLocal(nodes) {
     }
 }
 
-// ----------------------------------
-// --- FUNCIONES DE SINCRONIZACIÓN (MEJORADO) ---
-// ----------------------------------
-
-/**
- * Configura el listener de Firebase para actualizaciones en tiempo real.
- * @param {AppState} appState Estado global de la aplicación.
- * @param {firebase.database.Database} database Instancia de la base de datos.
- */
 function setupFirebaseListener(appState, database) {
-    // CAMBIO: Apuntar a la nueva ruta en la base de datos
     const nodesRef = database.ref('central/fiberService/cabinets');
     
-    // Usar 'on' en lugar de 'once' para actualizaciones en tiempo real
     nodesRef.on('value', (snapshot) => {
         console.log('🔄 Recibidos datos de Firebase (desde central/fiberService/cabinets)...');
         const data = snapshot.val();
         let fetchedNodes = [];
 
         if (data) {
-            // CAMBIO: Adaptar la lectura a la nueva estructura de datos (array o-bjeto)
             if (Array.isArray(data)) {
-                // Manejar si 'cabinets' es un ARRAY en Firebase
                 fetchedNodes = data
-                    .filter(cabinet => cabinet && typeof cabinet.latitude === 'number' && typeof cabinet.longitude === 'number') // Filtrar nulos y datos inválidos
+                    .filter(cabinet => cabinet && typeof cabinet.latitude === 'number' && typeof cabinet.longitude === 'number')
                     .map(cabinet => ({
-                        id: cabinet.nodeId, // Usar nodeId como ID
-                        lat: cabinet.latitude, // Mapear latitude -> lat
-                        lon: cabinet.longitude, // Mapear longitude -> lon
-                        name: cabinet.location || `Gabinete ${cabinet.nodeId}`, // Usar location o un nombre por defecto
+                        id: cabinet.nodeId,
+                        lat: cabinet.latitude,
+                        lon: cabinet.longitude,
+                        name: cabinet.location || `Gabinete ${cabinet.nodeId}`,
                         status: cabinet.status,
-                        originalData: cabinet // Guardar data original si es necesario
+                        originalData: cabinet
                     }));
             } else if (typeof data === 'object' && data !== null) {
-                // Manejar si 'cabinets' es un OBJETO en Firebase (común para arrays guardados)
                 fetchedNodes = Object.keys(data).map(key => {
                     const cabinet = data[key];
-                    // Asegurarse que el gabiente tiene datos válidos
                     if (cabinet && typeof cabinet.latitude === 'number' && typeof cabinet.longitude === 'number') {
                         return {
-                            id: cabinet.nodeId || key, // Usar nodeId o la clave de Firebase como ID
-                            lat: cabinet.latitude, // Mapear latitude -> lat
-                            lon: cabinet.longitude, // Mapear longitude -> lon
-                            name: cabinet.location || `Gabinete ${cabinet.nodeId}`, // Usar location o un nombre por defecto
+                            id: cabinet.nodeId || key,
+                            lat: cabinet.latitude,
+                            lon: cabinet.longitude,
+                            name: cabinet.location || `Gabinete ${cabinet.nodeId}`,
                             status: cabinet.status,
-                            originalData: cabinet // Guardar data original
+                            originalData: cabinet
                         };
                     }
-                    return null; // Ignorar este elemento
-                }).filter(Boolean); // Filtrar los nulos
+                    return null;
+                }).filter(Boolean);
             }
         }
 
         if (fetchedNodes.length > 0) {
             appState.nodes = fetchedNodes;
-            saveNodesToLocal(fetchedNodes); // Guardar el resultado
-            updateUI(appState); // Actualizar toda la UI con los nuevos datos
+            saveNodesToLocal(fetchedNodes);
+            updateUI(appState);
             console.log(`✅ Sincronización exitosa. Total de nodos: ${fetchedNodes.length}`);
         } else {
             console.log('ℹ️ Sincronización completa, no se encontraron nodos en Firebase.');
-            appState.nodes = []; // Limpiar si no hay nodos
+            appState.nodes = [];
             saveNodesToLocal([]);
             updateUI(appState);
         }
@@ -133,14 +103,6 @@ function setupFirebaseListener(appState, database) {
     });
 }
 
-// -----------------------------
-// --- FUNCIONES DE ACTUALIZACIÓN DE UI ---
-// -----------------------------
-
-/**
- * Dibuja los marcadores en el mapa usando los datos de appState.nodes.
- * @param {AppState} appState Estado global de la aplicación.
- */
 function drawMarkers(appState) {
     if (!appState.map || !appState.vectorSource) {
         console.error('❌ Mapa o fuente de vector no inicializados para dibujar marcadores.');
@@ -175,7 +137,7 @@ function drawMarkers(appState) {
             nodeData: node 
         });
         
-        feature.setId(node.id); // Asignar ID al feature para buscarlo
+        feature.setId(node.id);
         feature.setStyle(markerStyle);
         return feature;
     }).filter(f => f !== null); 
@@ -184,22 +146,13 @@ function drawMarkers(appState) {
     console.log(`🗺️ Dibujados ${features.length} marcadores en el mapa.`);
 }
 
-/**
- * Función central para actualizar toda la UI después de un cambio de datos.
- * @param {AppState} appState Estado global de la aplicación.
- */
 function updateUI(appState) {
     console.log('🎨 Actualizando interfaz de usuario...');
     
     drawMarkers(appState);
-    updateNodeList(appState); // Actualizar la lista de nodos/reportes
+    updateNodeList(appState);
 }
 
-/**
- * Muestra la información detallada de un nodo en el panel izquierdo.
- * @param {Object} nodeData Datos del nodo.
- * @param {AppState} appState Estado global de la aplicación.
- */
 function displayNodeInfo(nodeData, appState) {
     console.log('ℹ️ Mostrar información del nodo:', nodeData);
     
@@ -207,10 +160,8 @@ function displayNodeInfo(nodeData, appState) {
     const infoLoading = document.getElementById('infoLoading');
     
     if (sidebarContent) {
-        // Ocultar mensaje de "Selecciona un nodo"
         if(infoLoading) infoLoading.style.display = 'none';
 
-        // (MEJORADO) Contenido HTML más estructurado
         sidebarContent.innerHTML = `
             <div class="node-info-card">
                 <h3>${nodeData.name || 'Nodo Desconocido'}</h3>
@@ -221,7 +172,6 @@ function displayNodeInfo(nodeData, appState) {
             </div>
         `;
         
-        // Mostrar panel en móvil
         if (window.innerWidth <= 768) {
             document.getElementById('sidebar-info').classList.add('is-open');
             document.getElementById('sidebar-nodes').classList.remove('is-open');
@@ -229,11 +179,6 @@ function displayNodeInfo(nodeData, appState) {
     }
 }
 
-/**
- * Centra el mapa en un nodo específico.
- * @param {string} nodeId El ID del nodo.
- * @param {AppState} appState Estado global de la aplicación.
- */
 function viewNodeOnMap(nodeId, appState) {
     if (!appState.map || !appState.vectorSource) return;
 
@@ -242,23 +187,19 @@ function viewNodeOnMap(nodeId, appState) {
         const geometry = feature.getGeometry();
         appState.map.getView().animate({
             center: geometry.getCoordinates(),
-            zoom: 16, // Zoom más cercano al ver un nodo
+            zoom: 16,
             duration: 1000
         });
     }
 }
 
-/**
- * Actualiza la lista en el panel derecho (Nodos o Reportes).
- * @param {AppState} appState Estado global de la aplicación.
- */
 function updateNodeList(appState) {
     const listElement = document.getElementById('nodeList');
     const listTitle = document.getElementById('sidebarTitle');
     
     if (!listElement || !listTitle) return;
 
-    listTitle.textContent = appState.activeSection; // Actualizar título
+    listTitle.textContent = appState.activeSection;
 
     if (appState.activeSection === 'Reportes') {
         listElement.innerHTML = `
@@ -276,7 +217,6 @@ function updateNodeList(appState) {
             return;
         }
 
-        // (MEJORADO) Crear lista de nodos interactiva
         listElement.innerHTML = appState.nodes.map(node => 
             `<button class="node-list-item" onclick="AppManager.displayNodeById('${node.id}')">
                 <span class="node-list-name">${node.name || 'Nodo'}</span>
@@ -286,25 +226,15 @@ function updateNodeList(appState) {
     }
 }
 
-/**
- * Función helper para ser llamada desde el HTML (onclick)
- * @param {string} nodeId 
- */
 function displayNodeById(nodeId) {
     const node = window.AppManager.appState.nodes.find(n => n.id === nodeId);
     if (node) {
         displayNodeInfo(node, window.AppManager.appState);
-        viewNodeOnMap(nodeId, window.AppManager.appState); // Centrar mapa también
+        viewNodeOnMap(nodeId, window.AppManager.appState);
     }
 }
 
-
-// ------------------------------------------
-// --- LÓGICA PRINCIPAL DE LA APLICACIÓN ---
-// ------------------------------------------
-
 async function initApplication() {
-    // Exponer el estado global para acceso de funciones helper
     const appState = new AppState();
     window.AppManager.appState = appState; 
     
@@ -315,7 +245,6 @@ async function initApplication() {
         setupConnectivityMonitoring(appState);
         await initializeMap(appState);
         
-        // Carga inicial y configuración del listener
         await loadInitialData(appState, database); 
         
         console.log('✅ Aplicación inicializada correctamente');
@@ -385,70 +314,8 @@ async function initializeMap(appState) {
             }),
         });
 
-        // Evento de clic en el mapa
         appState.map.on('click', function(evt) {
             const feature = appState.map.forEachFeatureAtPixel(evt.pixel, (feature) => feature);
             if (feature) {
                 const nodeData = feature.get('nodeData');
-                if (nodeData) {
-                    displayNodeInfo(nodeData, appState);
-                }
-            }
-        });
-
-        // (MEJORADO) Quitar estado de carga añadiendo una clase
-        const mapElement = document.getElementById('map');
-        if (mapElement) {
-            mapElement.classList.add('map-loaded');
-        }
-
-        resolve();
-    });
-}
-
-// Carga inicial de datos (MEJORADO)
-async function loadInitialData(appState, database) {
-    // 1. Cargar desde localStorage primero (Offline-first)
-    const localNodes = getNodesFromLocal();
-    if (localNodes.length > 0) {
-        appState.nodes = localNodes;
-        updateUI(appState); // Actualizar UI con datos locales
-        console.log(`📁 Cargados ${localNodes.length} nodos desde caché local`);
-    }
-
-    // 2. Configurar el listener de Firebase (manejará online/offline)
-    if (appState.isOnline) {
-        setupFirebaseListener(appState, database);
-    } else {
-        console.warn('⚠️ Sin conexión. Mostrando datos locales. Se sincronizará al reconectar.');
-    }
-    
-    // Listener para reconectar
-    window.addEventListener('online', () => {
-        if (!window.firebaseListenerAttached) { // Evitar múltiples listeners
-             setupFirebaseListener(appState, database);
-             window.firebaseListenerAttached = true;
-        }
-    });
-}
-
-/**
- * Establece la sección activa (llamada desde HTML).
- * @param {'Reportes' | 'Nodos'} sectionName 
- */
-function setActiveSection(sectionName) {
-    if (window.AppManager.appState) {
-        window.AppManager.appState.activeSection = sectionName;
-        updateNodeList(window.AppManager.appState); // Actualizar la lista
-    }
-}
-
-// Exportar para uso global
-window.AppManager = {
-    initApplication,
-    CONFIG,
-    setActiveSection, // Exponer para botones
-    displayNodeById,  // Exponer para clics en la lista
-    viewNodeOnMap,    // Exponer para botón en tarjeta de info
-    appState: null      // Se llenará en initApplication
-};
+                if

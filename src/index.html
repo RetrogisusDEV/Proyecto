@@ -1,29 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="description" content="Sistema de gestión de nodos y reportes con mapa interactivo">
-    <meta name="theme-color" content="#0077b6">
-    
-    <!-- Preload crítico -->
-    <link rel="preload" href="styles/normalize.css" as="style">
-    <link rel="preload" href="styles/style.css" as="style">
-    
+    <meta
+      name="description"
+      content="Sistema de gestión de nodos y reportes con mapa interactivo"
+    />
+    <meta name="theme-color" content="#0077b6" />
+
+    <link rel="preload" href="styles/normalize.css" as="style" />
+    <link rel="preload" href="styles/style.css" as="style" />
+
     <link rel="stylesheet" href="styles/normalize.css" />
     <link rel="stylesheet" href="styles/style.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v10.6.0/ol.css" />
-    
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ol@v10.6.0/ol.css"
+    />
+
     <title>StarNet - Sistema de Gestión de Nodos</title>
-    
-    <!-- Estilos críticos inline para mejor renderizado -->
+
     <style>
-      /* Estilos críticos para el popup del mapa */
       .ol-popup {
         position: absolute;
         background-color: white;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
         padding: 15px;
         border-radius: 10px;
         border: 1px solid #cccccc;
@@ -31,7 +34,8 @@
         left: -50px;
         min-width: 280px;
       }
-      .ol-popup:after, .ol-popup:before {
+      .ol-popup:after,
+      .ol-popup:before {
         top: 100%;
         border: solid transparent;
         content: " ";
@@ -53,10 +57,8 @@
         margin-left: -11px;
       }
 
-      /* Loading state inicial (MEJORADO) */
-      /* Se oculta cuando el mapa tiene la clase 'map-loaded' */
       #map:not(.map-loaded)::before {
-        content: 'Cargando mapa...';
+        content: "Cargando mapa...";
         position: absolute;
         top: 50%;
         left: 50%;
@@ -65,110 +67,133 @@
         background: white;
         padding: 10px 20px;
         border-radius: 5px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       }
     </style>
-</head>
-<body>
-    <!-- Header semántico mejorado -->
+  </head>
+  <body>
     <header class="navbar" role="banner">
-        <h1 class="navbar-title">StarNet System</h1>
-        <nav class="navbar-nav" role="navigation" aria-label="Navegación principal">
-            <button id="btnReportes" class="nav-btn active" aria-pressed="true">
-                <span class="nav-btn-icon">📊</span>
-                <span class="nav-btn-text">Reportes</span>
-            </button>
-            <button id="btnNodos" class="nav-btn" aria-pressed="false">
-                <span class="nav-btn-icon">📍</span>
-                <span class="nav-btn-text">Nodos</span>
-            </button>
-            <button id="btnMenu" class="nav-btn" aria-pressed="false">
-                <span class="nav-btn-icon">☰</span>
-                <span class="nav-btn-text">Menú</span>
-            </button>
-        </nav>
+      <h1 class="navbar-title">StarNet System</h1>
+      <nav
+        class="navbar-nav"
+        role="navigation"
+        aria-label="Navegación principal"
+      >
+        <button id="btnReportes" class="nav-btn active" aria-pressed="true">
+          <span class="nav-btn-icon">📊</span>
+          <span class="nav-btn-text">Reportes</span>
+        </button>
+        <button id="btnNodos" class="nav-btn" aria-pressed="false">
+          <span class="nav-btn-icon">📍</span>
+          <span class="nav-btn-text">Nodos</span>
+        </button>
+        <button id="btnMenu" class="nav-btn" aria-pressed="false">
+          <span class="nav-btn-icon">☰</span>
+          <span class="nav-btn-text">Menú</span>
+        </button>
+      </nav>
     </header>
 
-    <!-- Paneles laterales con semántica mejorada -->
-    <aside class="content-left" id="sidebar-info" role="complementary" aria-label="Información del nodo">
-        <span class="sidebar-title">Información del Nodo</span>
-        <!-- Contenedor para el contenido dinámico -->
-        <div class="sidebar-content" id="sidebarContent">
-            <div class="loading-state" id="infoLoading">
-                <span>Selecciona un nodo o un marcador en el mapa para ver sus detalles.</span>
-            </div>
+    <aside
+      class="content-left"
+      id="sidebar-info"
+      role="complementary"
+      aria-label="Información del nodo"
+    >
+      <span class="sidebar-title">Información del Nodo</span>
+      <div class="sidebar-content" id="sidebarContent">
+        <div class="loading-state" id="infoLoading">
+          <span
+            >Selecciona un nodo o un marcador en el mapa para ver sus
+            detalles.</span
+          >
         </div>
+      </div>
     </aside>
 
-    <aside class="content-right" id="sidebar-nodes" role="complementary" aria-label="Lista de nodos y reportes">
-        <span class="sidebar-title" id="sidebarTitle">Reportes</span>
-        <!-- Contenedor para la lista dinámica -->
-        <div class="node-list" id="nodeList" role="list" aria-label="Lista de elementos">
-            <div class="loading-state" id="nodeListLoading">
-                <span>Cargando...</span>
-            </div>
+    <aside
+      class="content-right"
+      id="sidebar-nodes"
+      role="complementary"
+      aria-label="Lista de nodos y reportes"
+    >
+      <span class="sidebar-title" id="sidebarTitle">Reportes</span>
+      <div
+        class="node-list"
+        id="nodeList"
+        role="list"
+        aria-label="Lista de elementos"
+      >
+        <div class="loading-state" id="nodeListLoading">
+          <span>Cargando...</span>
         </div>
+      </div>
     </aside>
 
-    <!-- Contenido principal -->
     <main role="main">
-        <div class="content">
-            <div id="map" role="application" aria-label="Mapa interactivo de nodos">
-                <!-- El mapa se carga aquí -->
-            </div>
-        </div>
+      <div class="content">
+        <div
+          id="map"
+          role="application"
+          aria-label="Mapa interactivo de nodos"
+        ></div>
+      </div>
     </main>
 
-    <!-- Scripts con defer y orden optimizado -->
-    <script src="https://cdn.jsdelivr.net/npm/ol@v10.6.0/dist/ol.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js" defer></script>
-    <script src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js" defer></script>
-    
-    <!-- Script principal con manejo de errores -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/ol@v10.6.0/dist/ol.js"
+      defer
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/9.10.0/firebase-app-compat.js"
+      defer
+    ></script>
+    <script
+      src="https://www.gstatic.com/firebasejs/9.10.0/firebase-database-compat.js"
+      defer
+    ></script>
+
     <script>
-        // Verificación de carga de dependencias
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Esperar a que las librerías estén cargadas (defer se ejecuta antes de DOMContentLoaded)
-                if (typeof ol === 'undefined') {
-                    throw new Error('OpenLayers no se cargó correctamente');
-                }
-                if (typeof firebase === 'undefined') {
-                    throw new Error('Firebase no se cargó correctamente');
-                }
-                
-                // Inicializar la aplicación (definida en app.js)
-                await initApplication();
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          if (typeof ol === "undefined") {
+            throw new Error("OpenLayers no se cargó correctamente");
+          }
+          if (typeof firebase === "undefined") {
+            throw new Error("Firebase no se cargó correctamente");
+          }
 
-                // Conectar botones de navegación (MEJORADO)
-                const btnReportes = document.getElementById('btnReportes');
-                const btnNodos = document.getElementById('btnNodos');
-                
-                btnReportes.addEventListener('click', () => {
-                    AppManager.setActiveSection('Reportes');
-                    btnReportes.classList.add('active');
-                    btnNodos.classList.remove('active');
-                    btnReportes.setAttribute('aria-pressed', 'true');
-                    btnNodos.setAttribute('aria-pressed', 'false');
-                });
+          await initApplication();
 
-                btnNodos.addEventListener('click', () => {
-                    AppManager.setActiveSection('Nodos');
-                    btnNodos.classList.add('active');
-                    btnReportes.classList.remove('active');
-                    btnNodos.setAttribute('aria-pressed', 'true');
-                    btnReportes.setAttribute('aria-pressed', 'false');
-                });
+          const btnReportes = document.getElementById("btnReportes");
+          const btnNodos = document.getElementById("btnNodos");
 
-            } catch (error) {
-                console.error('Error inicializando la aplicación:', error);
-                showErrorToUser('Error al cargar la aplicación. Por favor, recarga la página.');
-            }
-        });
+          btnReportes.addEventListener("click", () => {
+            AppManager.setActiveSection("Reportes");
+            btnReportes.classList.add("active");
+            btnNodos.classList.remove("active");
+            btnReportes.setAttribute("aria-pressed", "true");
+            btnNodos.setAttribute("aria-pressed", "false");
+          });
 
-        function showErrorToUser(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.style.cssText = `
+          btnNodos.addEventListener("click", () => {
+            AppManager.setActiveSection("Nodos");
+            btnNodos.classList.add("active");
+            btnReportes.classList.remove("active");
+            btnNodos.setAttribute("aria-pressed", "true");
+            btnReportes.setAttribute("aria-pressed", "false");
+          });
+        } catch (error) {
+          console.error("Error inicializando la aplicación:", error);
+          showErrorToUser(
+            "Error al cargar la aplicación. Por favor, recarga la página."
+          );
+        }
+      });
+
+      function showErrorToUser(message) {
+        const errorDiv = document.createElement("div");
+        errorDiv.style.cssText = `
                 position: fixed;
                 top: 20px;
                 left: 50%;
@@ -180,14 +205,13 @@
                 z-index: 10000;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.3);
             `;
-            errorDiv.textContent = message;
-            document.body.appendChild(errorDiv);
-            
-            setTimeout(() => errorDiv.remove(), 5000);
-        }
+        errorDiv.textContent = message;
+        document.body.appendChild(errorDiv);
+
+        setTimeout(() => errorDiv.remove(), 5000);
+      }
     </script>
-    
-    <!-- Script de la aplicación separado (RUTA CORREGIDA) -->
+
     <script src="components/app.js" defer></script>
-</body>
+  </body>
 </html>

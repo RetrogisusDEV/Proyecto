@@ -1,51 +1,35 @@
-/* ------------------------------------------------------------------ */
-/* --- VARIABLES CSS (DESIGN TOKENS) --- */
-/* Esquema de color: Dark Mode "StarNet" con tokens de diseño modernos */
-/* ------------------------------------------------------------------ */
 :root {
-  /* Fondo Principal (Oscuro Profundo) */
   --background-color: #0A0A0F; 
   
-  /* Superficies para acrílico (Adaptado para dark mode) */
   --surface-color-base: #1E1E23;
-  --surface-color-acrylic: rgba(30, 30, 35, 0.75); /* Acrílico para paneles */
-  --surface-color-acrylic-mobile: rgba(30, 30, 35, 0.95); /* Menos transparente en móvil */
-
-  /* Colores de Acento (Azul) */
-  --primary-500: #3B82F6; /* Azul primario */
-  --primary-700: #1D4ED8; /* Azul para estado activo */
+  --surface-color-acrylic: rgba(30, 30, 35, 0.75);
+  --surface-color-acrylic-mobile: rgba(30, 30, 35, 0.95);
+  --primary-500: #3B82F6;
+  --primary-700: #1D4ED8;
   
-  /* Colores de Estado Semántico */
   --success: #10b981;
   --error: #ef4444;
   --warning: #f59e0b;
 
-  /* Texto */
   --text-primary: #FAFAFF;
   --text-secondary: #C0C0C5;
   --text-tertiary: #9CA3AF;
   
-  /* Sombras y Bordes */
   --border-radius-lg: 16px;
   --border-radius: 0px;
   --border-radius-sm: 8px;
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3);
 
-  /* Espaciado */
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 32px;
 
-  /* Animación */
-  --transition-cubic-bezier-elastic: cubic-bezier(0.34, 1.56, 0.64, 1); /* Rebote */
-  --transition-cubic-bezier-fluid: cubic-bezier(0.4, 0, 0.2, 1);      /* Fluidez */
+  --transition-cubic-bezier-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-cubic-bezier-fluid: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ------------------------------------------------------------------ */
-/* --- RESET Y ESTILOS GLOBALES --- */
-/* ------------------------------------------------------------------ */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -63,10 +47,8 @@ body {
   color: var(--text-primary);
   background-color: var(--background-color);
   min-height: 100vh;
-  /* El diseño de la cuadrícula se define en el media query de escritorio */
 }
 
-/* Base para botones sin estilos nativos */
 button {
   border: 0 none;
   cursor: pointer;
@@ -75,26 +57,14 @@ button {
   padding: 0;
 }
 
-/* ------------------------------------------------------------------ */
-/* --- CONTENEDORES DE BARRA LATERAL (ACRÍLICO) --- */
-/* Se aplican los estilos base de acrílico y tarjeta */
-/* ------------------------------------------------------------------ */
-
 .sidebar-content,
 .node-list,
 .loading-state,
 .error-state {
-    /* Clases genéricas usadas dentro de los paneles */
     transition: all 0.3s var(--transition-cubic-bezier-fluid);
 }
 
-
-/* ------------------------------------------------------------------ */
-/* --- NAVEGACIÓN (HEADER) - MOBILE Y DESKTOP --- */
-/* ------------------------------------------------------------------ */
-
 header.navbar {
-  /* Estilos Glass Effect (Desktop) / Barra simple (Mobile) */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -116,9 +86,6 @@ header.navbar {
   gap: var(--space-sm);
 }
 
-/* ------------------------------------------------------------------ */
-/* --- BOTONES DE NAVEGACIÓN (.nav-btn) - Animación Elástica --- */
-/* ------------------------------------------------------------------ */
 .nav-btn {
   display: flex;
   align-items: center;
@@ -129,49 +96,39 @@ header.navbar {
   font-weight: 600;
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--border-radius);
-  /* Transición principal - Usa la curva elástica para el 'pop' */
   transition: 
     background-color 0.4s var(--transition-cubic-bezier-fluid),
     color 0.4s var(--transition-cubic-bezier-fluid),
     box-shadow 0.4s var(--transition-cubic-bezier-fluid),
     transform 0.5s var(--transition-cubic-bezier-elastic);
-  min-height: 44px; /* Tamaño mínimo para touch (WCAG) */
+  min-height: 44px;
 }
 
-/* Estado :hover y :focus-visible (Accesibilidad) */
 .nav-btn:hover,
 .nav-btn:focus-visible {
   background-color: var(--surface-color-base);
   color: var(--primary-500);
-  /* Efecto elástico de elevación */
-  transform: scale(1.05) translateY(-2px); 
-  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); 
-  
-  /* Foco visible y claro */
-  outline: 3px solid var(--primary-500); 
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
+  outline: 3px solid var(--primary-500);
   outline-offset: 2px;
 }
 
-/* Estado Activo */
 .nav-btn.active {
   background-color: var(--primary-700);
   color: var(--text-primary);
-  transform: scale(1); /* Desactivar rebote si está activo */
+  transform: scale(1);
 }
 
-/* Estado :active (Presionado) */
 .nav-btn:active {
-  background-color: var(--primary-700); 
-  transform: scale(0.98) translateY(1px); 
-  transition-duration: 0.1s; 
+  background-color: var(--primary-700);
+  transform: scale(0.98) translateY(1px);
+  transition-duration: 0.1s;
 }
 
-/* ------------------------------------------------------------------ */
-/* --- CONTENIDO PRINCIPAL Y MAPA --- */
-/* ------------------------------------------------------------------ */
 main {
   width: 100%;
-  height: 100%; 
+  height: 100%;
   position: relative;
 }
 
@@ -188,16 +145,10 @@ main {
   overflow: hidden;
 }
 
-/* ------------------------------------------------------------------ */
-/* --- PANELES LATERALES (ASIDE) --- */
-/* ------------------------------------------------------------------ */
-
 .content-left, .content-right {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-xl);
-  
-  /* EFECTO ACRÍLICO: Se aplica el fondo transparente con filtro */
   background-color: var(--surface-color-acrylic);
   backdrop-filter: blur(15px) saturate(120%);
   -webkit-backdrop-filter: blur(15px) saturate(120%);
@@ -210,7 +161,7 @@ main {
   padding: var(--space-md) var(--space-lg);
   color: var(--primary-500);
   user-select: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separador sutil */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-content, .node-list {
@@ -219,7 +170,6 @@ main {
   padding: var(--space-lg);
 }
 
-/* Componente de lista de nodos (Ejemplo de lista dentro de .node-list) */
 .node-btn {
   display: flex;
   flex-direction: column;
@@ -227,13 +177,11 @@ main {
   text-align: left;
   background-color: var(--surface-color-base);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-left: 6px solid var(--text-tertiary); /* Borde de estado por defecto */
+  border-left: 6px solid var(--text-tertiary);
   padding: var(--space-md);
   margin-bottom: var(--space-sm);
   cursor: pointer;
   border-radius: var(--border-radius-sm);
-  
-  /* Transición principal - Usa la curva elástica para el 'pop' */
   transition: 
     background-color 0.4s var(--transition-cubic-bezier-fluid),
     box-shadow 0.5s var(--transition-cubic-bezier-fluid),
@@ -244,9 +192,9 @@ main {
 .node-btn:hover,
 .node-btn:focus-visible {
   background-color: var(--surface-color-base);
-  transform: scale(1.02) translateY(-1px); /* Rebote sutil */
+  transform: scale(1.02) translateY(-1px);
   box-shadow: var(--shadow-lg);
-  outline: 2px solid var(--primary-500); 
+  outline: 2px solid var(--primary-500);
   outline-offset: 2px;
 }
 
@@ -266,7 +214,6 @@ main {
   color: var(--text-secondary);
 }
 
-/* Estados de nodos */
 .status-activo {
   border-left-color: var(--success);
 }
@@ -279,10 +226,6 @@ main {
   border-left-color: var(--warning);
 }
 
-/* ------------------------------------------------------------------ */
-/* --- ESTADOS DE UI --- */
-/* ------------------------------------------------------------------ */
-
 .loading-state {
   display: flex;
   justify-content: center;
@@ -292,16 +235,11 @@ main {
   text-align: center;
 }
 
-/* ------------------------------------------------------------------ */
-/* --- DISEÑO DESKTOP (GRID LAYOUT) --- */
-/* ------------------------------------------------------------------ */
 @media (min-width: 769px) {
   body {
     display: grid;
     height: 100vh;
-    overflow: hidden; /* Evita el scroll global */
-
-    /* Definición del grid: 2 Paneles laterales y 1 mapa central */
+    overflow: hidden;
     grid-template-columns: 350px 1fr 350px;
     grid-template-rows: 80px 1fr;
     grid-template-areas:
@@ -315,12 +253,9 @@ main {
     grid-area: nav;
     position: relative;
     width: auto;
-    /* Margen negativo para extender la barra de navegación a los bordes del padding del body */
     margin: calc(-1 * var(--space-lg)) calc(-1 * var(--space-lg)) 0 calc(-1 * var(--space-lg));
     padding: var(--space-md) var(--space-lg);
     border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-    
-    /* ACRÍLICO DESKTOP */
     background-color: var(--surface-color-acrylic);
     backdrop-filter: blur(15px) saturate(120%);
     -webkit-backdrop-filter: blur(15px) saturate(120%);
@@ -339,32 +274,25 @@ main {
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* --- DISEÑO MOBILE-FIRST (BOTTOM SHEETS) --- */
-/* ------------------------------------------------------------------ */
 @media (max-width: 768px) {
   body {
     padding: 0;
   }
   
-  /* El mapa ocupa toda la vista */
   main {
     height: 100vh;
     width: 100vw;
   }
   
-  /* Navbar fija en la parte superior del mapa */
   header.navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    /* Fondo más oscuro y semitransparente para leer sobre el mapa */
     background: rgba(0, 0, 0, 0.4);
     box-shadow: var(--shadow-lg);
     padding: var(--space-sm) var(--space-md);
   }
 
-  /* La navegación principal se convierte en una 'Pill Bar' flotante */
   .navbar-nav {
     position: fixed;
     bottom: var(--space-lg);
@@ -375,8 +303,6 @@ main {
     justify-content: center;
     padding: var(--space-sm);
     gap: var(--space-sm);
-    
-    /* ACRÍLICO MOBILE PARA LA BARRA INFERIOR */
     background-color: var(--surface-color-acrylic-mobile);
     backdrop-filter: blur(10px) saturate(150%);
     -webkit-backdrop-filter: blur(10px) saturate(150%);
@@ -384,7 +310,6 @@ main {
     box-shadow: var(--shadow-xl);
   }
 
-  /* Botones en mobile (solo ícono) */
   .nav-btn {
     padding: var(--space-md);
     min-width: 50px;
@@ -394,15 +319,13 @@ main {
   }
   
   .nav-btn-text {
-    display: none; /* Oculta el texto en móvil */
+    display: none;
   }
 
   .nav-btn.active {
-    /* Mantiene el color activo para el ícono */
     color: var(--text-primary);
   }
 
-  /* Paneles laterales como Bottom Sheets */
   .content-left, .content-right {
     position: fixed;
     bottom: 0;
@@ -411,26 +334,22 @@ main {
     max-height: 90vh;
     z-index: 999;
     transform: translateY(100%);
-    /* Transición elástica para que la hoja se muestre con un rebote */
-    transition: transform 0.4s var(--transition-cubic-bezier-elastic); 
+    transition: transform 0.4s var(--transition-cubic-bezier-elastic);
     border-top-left-radius: var(--border-radius-lg);
     border-top-right-radius: var(--border-radius-lg);
     box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
   }
 
-  /* Estado abierto (Requiere JS para añadir esta clase) */
   .content-left.is-open,
   .content-right.is-open {
     transform: translateY(0);
   }
 
-  /* Título del panel como "Handle" de arrastre */
   .sidebar-title {
     position: sticky;
     top: 0;
     z-index: 10;
-    /* Fondo transparente para que el contenido se desplace debajo */
-    background-color: var(--surface-color-acrylic-mobile); 
+    background-color: var(--surface-color-acrylic-mobile);
     border-bottom: none;
     cursor: grab;
     padding: var(--space-lg);
@@ -450,16 +369,11 @@ main {
   }
   
   .node-list, .sidebar-content {
-    /* Espacio seguro para la barra de navegación inferior */
-    padding-bottom: 80px; 
+    padding-bottom: 80px;
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* --- ACCESIBILIDAD: PREFERS-REDUCED-MOTION --- */
-/* ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
-  /* Deshabilita todas las transiciones y transformaciones */
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
