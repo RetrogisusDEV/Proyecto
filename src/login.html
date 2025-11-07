@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login</title>
+  <link rel="stylesheet" href="styles/normalize.css">
+  <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+  <main class="container">
+    <section class="auth-card">
+      <h1 class="title">Acceso</h1>
+
+      <div id="message" class="message" aria-live="polite"></div>
+
+      <form id="login-form" class="auth-form">
+        <h2>Iniciar sesión</h2>
+        <label for="login-name">Nombre de usuario</label>
+        <input id="login-name" name="name" type="text" required placeholder="Tu usuario">
+
+        <label for="login-password">Contraseña</label>
+        <input id="login-password" name="password" type="password" required placeholder="Contraseña">
+
+        <button class="btn" id="btn-login" type="submit">Entrar</button>
+        <p class="muted">¿No tienes cuenta? <a href="register.html">Regístrate</a></p>
+      </form>
+    </section>
+  </main>
+
+  <script src="components/login.js" defer></script>
+</body>
+</html>
