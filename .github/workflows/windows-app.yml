@@ -2,7 +2,7 @@ name: Build Windows App
 on:
   push:
     paths:
-      - 'windows/main_windows.py'
+      - 'main_windows.py'
       - 'src/index.html'
       - 'src/styles/style.css'
       - 'src/components/app.js'
@@ -20,16 +20,23 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pywebview
+          pip install pywebview pyarmor Flask requests
       - name: Lint main_windows.py
         run: |
           python -m py_compile main_windows.py
-      - name: Package with PyInstaller
+      - name: Install PyInstaller
         run: |
           pip install pyinstaller
-          pyinstaller --onefile main_windows.py
+      - name: Obfuscate with PyArmor
+        run: |
+          mkdir obf
+          pyarmor obfuscate --recursive -O obf main_windows.py
+      - name: Package with PyInstaller (using obfuscated source)
+        run: |
+          REM Use build/ as output dirs and include src/ as data so packaged app can access static files
+          pyinstaller --onefile --distpath build/dist --workpath build/build --specpath build --add-data "src;src" obf/main_windows.py
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: windows-app-exe
-          path: dist/main_windows.exe
+          path: build/dist/main_windows.exe

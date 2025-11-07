@@ -1,0 +1,28 @@
+# Ignore build outputs and packaging artifacts
+/build/
+/dist/
+
+# Ignore virtual environments
+/venv/
+venv/
+.venv/
+
+# Ignore internal index folder
+/.idx/
+
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller spec files
+*.spec
+
+# Editor and OS files
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Optional: pip wheel metadata
+pip-wheel-metadata/
