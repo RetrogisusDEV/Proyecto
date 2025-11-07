@@ -23,11 +23,11 @@ jobs:
           pip install pywebview
       - name: Lint main_windows.py
         run: |
-          python -m py_compile windows/main_windows.py
+          python -m py_compile main_windows.py
       - name: Package with PyInstaller
         run: |
           pip install pyinstaller
-          pyinstaller --onefile windows/main_windows.py
+          pyinstaller --onefile main_windows.py
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
