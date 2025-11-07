@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Acceso / Registro</title>
+  <link rel="stylesheet" href="styles/normalize.css">
+  <link rel="stylesheet" href="styles/auth.css">
+</head>
+<body>
+  <main class="container">
+    <section class="auth-card">
+      <h1 class="title">Acceso / Registro</h1>
+
+      <div id="message" class="message" aria-live="polite"></div>
+
+      <form id="login-form" class="auth-form">
+        <h2>Iniciar sesión</h2>
+        
+        <label for="login-name">Nombre de usuario</label>
+        <input id="login-name" name="name" type="text" required placeholder="Tu usuario" autocomplete="username">
+
+        <label for="login-password">Contraseña</label>
+        <input id="login-password" name="password" type="password" required placeholder="Contraseña" autocomplete="current-password">
+
+        <button class="btn" id="btn-login" type="submit">Entrar</button>
+        <p class="muted">¿No tienes cuenta? <a href="#" id="show-register-link">Regístrate</a></p>
+      </form>
+
+      <form id="register-form" class="auth-form hidden">
+        <h2>Crear cuenta</h2>
+        
+        <label for="reg-name">Nombre de usuario</label>
+        <input id="reg-name" name="name" type="text" required placeholder="Tu usuario" autocomplete="username">
+
+        <label for="reg-password">Contraseña</label>
+        <input id="reg-password" name="password" type="password" required placeholder="Contraseña" autocomplete="new-password">
+
+        <label for="reg-password-confirm">Confirmar contraseña</label>
+        <input id="reg-password-confirm" name="passwordConfirm" type="password" required placeholder="Repite la contraseña" autocomplete="new-password">
+
+        <button class="btn" id="btn-register" type="submit">Registrarse</button>
+        <p class="muted">¿Ya tienes una cuenta? <a href="#" id="show-login-link">Inicia sesión</a></p>
+      </form>
+
+    </section>
+  </main>
+
+  <script src="components/auth.js" defer></script>
+</body>
+</html>
