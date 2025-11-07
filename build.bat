@@ -42,20 +42,18 @@ if exist "%SRC%" (
 )
 
 REM Obfuscar con PyArmor (intenta pyarmor-7, luego pyarmor; si todo falla copia original a obf)
-echo Obfuscando con PyArmor...
+
+echo Obfuscando con PyArmor v9...
 if exist "%OBF_DIR%" rmdir /s /q "%OBF_DIR%"
 mkdir "%OBF_DIR%"
 
-REM Intentar pyarmor-7 primero (compatibilidad con v7)
-pyarmor-7 obfuscate --recursive -O "%OBF_DIR%" "%SRC%" >nul 2>&1
+REM Usar pyarmor gen para ofuscar el script principal
+REM Usar pyarmor gen con --advanced 2 para compatibilidad con PyInstaller
+pyarmor gen --advanced 2 -O "%OBF_DIR%" "%SRC%" >nul 2>&1
 if errorlevel 1 (
-  echo pyarmor-7 no disponible o fallo; intentando pyarmor...
-  pyarmor obfuscate --recursive -O "%OBF_DIR%" "%SRC%" >nul 2>&1
-  if errorlevel 1 (
-    echo Obfuscacion por pyarmor fallo o la version no soporta 'obfuscate'.
-    echo Copiando archivo original a %OBF_DIR% para que PyInstaller pueda continuar.
-    copy /Y "%SRC%" "%OBF_TARGET%" >nul 2>&1
-  )
+  echo Obfuscacion por pyarmor fallo.
+  echo Copiando archivo original a %OBF_DIR% para que PyInstaller pueda continuar.
+  copy /Y "%SRC%" "%OBF_TARGET%" >nul 2>&1
 )
 
 REM Asegurarse de que exista un objetivo para PyInstaller
@@ -68,19 +66,17 @@ if not exist "%OBF_TARGET%" (
 
 
 REM Empaquetar con PyInstaller, usando obf\main_windows.py si existe
+
 echo Empaquetando con PyInstaller...
 if exist "%BUILD_DIR%\dist" rmdir /s /q "%BUILD_DIR%\dist" >nul 2>&1
 if exist "%BUILD_DIR%\build" rmdir /s /q "%BUILD_DIR%\build" >nul 2>&1
 
-
-set "TARGET=%SRC%"
-if exist "%OBF_TARGET%" set "TARGET=%OBF_TARGET%"
-
-REM Incluir carpeta src/ como datos en el ejecutable (usar la carpeta src/ raíz del proyecto)
-REM PyInstaller --add-data usa formato: origen;destino (en Windows usar punto y coma)
+REM Empaquetar todos los archivos generados por PyArmor en obf/
+set "TARGET=%OBF_DIR%\main_windows.py"
 set "PROJECT_DIR=%CD%"
 set "ADD_DATA=%PROJECT_DIR%\src;src"
-pyinstaller --noconfirm --onefile --distpath "%BUILD_DIR%\dist" --workpath "%BUILD_DIR%\build" --specpath "%BUILD_DIR%" --add-data "%ADD_DATA%" "%TARGET%" || pyinstaller --noconfirm --onefile --distpath "%BUILD_DIR%\dist" --workpath "%BUILD_DIR%\build" --specpath "%BUILD_DIR%" --add-data "%ADD_DATA%" "%TARGET%" || goto :err
+set "ADD_OBF=%PROJECT_DIR%\build\obf;obf"
+pyinstaller --noconfirm --onefile --distpath "%BUILD_DIR%\dist" --workpath "%BUILD_DIR%\build" --specpath "%BUILD_DIR%" --add-data "%ADD_DATA%" --add-data "%ADD_OBF%" "%TARGET%" || goto :err
 
 echo.
 if exist "%BUILD_DIR%\dist\main_windows.exe" (

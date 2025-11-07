@@ -28,9 +28,9 @@ jobs:
         run: |
           pip install pyinstaller
       - name: Obfuscate with PyArmor
-        run: |
-          mkdir obf
-          pyarmor obfuscate --recursive -O obf main_windows.py
+          run: |
+            mkdir obf
+            pyarmor gen -O obf main_windows.py
       - name: Package with PyInstaller (using obfuscated source)
         run: |
           REM Use build/ as output dirs and include src/ as data so packaged app can access static files

@@ -7,10 +7,10 @@ import sys
 def start_windows_app():
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    html_path = os.path.join(base_dir, "src/index.html")
+    html_path = os.path.join(base_dir, "src/auth.html")
 
     if not os.path.exists(html_path):
-        print(f"Error: No se encuentra el archivo 'index.html' en la ruta: {html_path}")
+        print(f"Error: No se encuentra el archivo 'auth.html' en la ruta: {html_path}")
         return
 
     webview.create_window(
