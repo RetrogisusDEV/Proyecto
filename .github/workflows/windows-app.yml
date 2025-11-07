@@ -3,9 +3,10 @@ on:
   push:
     paths:
       - 'windows/main_windows.py'
-      - 'index.html'
+      - 'src/index.html'
+      - 'src/styles/style.css'
+      - 'src/components/app.js'
       - 'requirements.txt'
-      - '.github/workflows/windows-app.yml'
 jobs:
   build-windows:
     runs-on: windows-latest

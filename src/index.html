@@ -53,8 +53,9 @@
         margin-left: -11px;
       }
 
-      /* Loading state inicial */
-      #map::before {
+      /* Loading state inicial (MEJORADO) */
+      /* Se oculta cuando el mapa tiene la clase 'map-loaded' */
+      #map:not(.map-loaded)::before {
         content: 'Cargando mapa...';
         position: absolute;
         top: 50%;
@@ -91,6 +92,7 @@
     <!-- Paneles laterales con semántica mejorada -->
     <aside class="content-left" id="sidebar-info" role="complementary" aria-label="Información del nodo">
         <span class="sidebar-title">Información del Nodo</span>
+        <!-- Contenedor para el contenido dinámico -->
         <div class="sidebar-content" id="sidebarContent">
             <div class="loading-state" id="infoLoading">
                 <span>Selecciona un nodo o un marcador en el mapa para ver sus detalles.</span>
@@ -100,9 +102,10 @@
 
     <aside class="content-right" id="sidebar-nodes" role="complementary" aria-label="Lista de nodos y reportes">
         <span class="sidebar-title" id="sidebarTitle">Reportes</span>
+        <!-- Contenedor para la lista dinámica -->
         <div class="node-list" id="nodeList" role="list" aria-label="Lista de elementos">
-            <div class="loading-state">
-                <span>Cargando nodos...</span>
+            <div class="loading-state" id="nodeListLoading">
+                <span>Cargando...</span>
             </div>
         </div>
     </aside>
@@ -126,7 +129,7 @@
         // Verificación de carga de dependencias
         window.addEventListener('DOMContentLoaded', async () => {
             try {
-                // Esperar a que las librerías estén cargadas
+                // Esperar a que las librerías estén cargadas (defer se ejecuta antes de DOMContentLoaded)
                 if (typeof ol === 'undefined') {
                     throw new Error('OpenLayers no se cargó correctamente');
                 }
@@ -134,8 +137,29 @@
                     throw new Error('Firebase no se cargó correctamente');
                 }
                 
-                // Inicializar la aplicación
+                // Inicializar la aplicación (definida en app.js)
                 await initApplication();
+
+                // Conectar botones de navegación (MEJORADO)
+                const btnReportes = document.getElementById('btnReportes');
+                const btnNodos = document.getElementById('btnNodos');
+                
+                btnReportes.addEventListener('click', () => {
+                    AppManager.setActiveSection('Reportes');
+                    btnReportes.classList.add('active');
+                    btnNodos.classList.remove('active');
+                    btnReportes.setAttribute('aria-pressed', 'true');
+                    btnNodos.setAttribute('aria-pressed', 'false');
+                });
+
+                btnNodos.addEventListener('click', () => {
+                    AppManager.setActiveSection('Nodos');
+                    btnNodos.classList.add('active');
+                    btnReportes.classList.remove('active');
+                    btnNodos.setAttribute('aria-pressed', 'true');
+                    btnReportes.setAttribute('aria-pressed', 'false');
+                });
+
             } catch (error) {
                 console.error('Error inicializando la aplicación:', error);
                 showErrorToUser('Error al cargar la aplicación. Por favor, recarga la página.');
@@ -163,7 +187,7 @@
         }
     </script>
     
-    <!-- Script de la aplicación separado (mejor mantenibilidad) -->
+    <!-- Script de la aplicación separado (RUTA CORREGIDA) -->
     <script src="components/app.js" defer></script>
 </body>
 </html>

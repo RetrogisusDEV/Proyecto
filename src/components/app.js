@@ -13,15 +13,10 @@ const CONFIG = {
         NODES: 'starnetAppNodes',
         LAST_SYNC: 'starnetLastSync'
     },
-    SYNC: {
-        INTERVAL: 5 * 60 * 1000, // 5 minutos
-        RETRY_DELAY: 10000, // 10 segundos para reintentos
-        MAX_RETRIES: 3
-    },
+    // Sincronización eliminada, Firebase 'on' lo maneja
     MAP: {
         DEFAULT_CENTER: [-66.2442, 9.8606], // Altagracia de Orituco
         DEFAULT_ZOOM: 14,
-        // Ícono de marcador SVG codificado en base64
         MARKER_ICON: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNy41ODYgMiA0IDUuNTg2IDQgMTBDNCAxNC40MTQgNy41ODYgMTggMTIgMThDMTYuNDE0IDE4IDIwIDE0LjQxNCAyMCAxMEMyMCA1LjU4NiAxNi40MTQgMiAxMiAyWk0xMiAxMkMxMC44OTcgMTIgMTAgMTEuMTAzIDEwIDEwQzEwIDguODk3IDEwLjg5NyA4IDEyIDhDMTMuMTAzIDggMTQgOC44OTcgMTQgMTBDMTQgMTEuMTAzIDEzLjEwMyAxMiAxMiAxMloiIGZpbGw9IiMwMDc3YjYiLz4KPC9zdmc+'
     }
 };
@@ -30,8 +25,7 @@ const CONFIG = {
 class AppState {
     constructor() {
         this.nodes = [];
-        this.activeSection = 'Reportes';
-        this.syncRetries = 0;
+        this.activeSection = 'Reportes'; // Sección inicial
         this.isOnline = navigator.onLine;
         this.map = null;
         this.vectorSource = null;
@@ -71,54 +65,72 @@ function saveNodesToLocal(nodes) {
 }
 
 // ----------------------------------
-// --- FUNCIONES DE SINCRONIZACIÓN ---
+// --- FUNCIONES DE SINCRONIZACIÓN (MEJORADO) ---
 // ----------------------------------
 
 /**
- * Recupera los nodos desde Firebase y actualiza el estado y la UI.
+ * Configura el listener de Firebase para actualizaciones en tiempo real.
  * @param {AppState} appState Estado global de la aplicación.
  * @param {firebase.database.Database} database Instancia de la base de datos.
  */
-async function fetchNodesFromFirebase(appState, database) {
-    if (!appState.isOnline) {
-        console.warn('⚠️ No se puede sincronizar: Sin conexión.');
-        return;
-    }
-
-    try {
-        console.log('🔄 Sincronizando datos con Firebase...');
-        const snapshot = await database.ref('nodes').once('value');
+function setupFirebaseListener(appState, database) {
+    // CAMBIO: Apuntar a la nueva ruta en la base de datos
+    const nodesRef = database.ref('central/fiberService/cabinets');
+    
+    // Usar 'on' en lugar de 'once' para actualizaciones en tiempo real
+    nodesRef.on('value', (snapshot) => {
+        console.log('🔄 Recibidos datos de Firebase (desde central/fiberService/cabinets)...');
         const data = snapshot.val();
-        
         let fetchedNodes = [];
+
         if (data) {
-            // Convertir el objeto de Firebase a un array.
-            fetchedNodes = Object.keys(data).map(key => ({ 
-                id: key, 
-                ...data[key] 
-            }));
+            // CAMBIO: Adaptar la lectura a la nueva estructura de datos (array o-bjeto)
+            if (Array.isArray(data)) {
+                // Manejar si 'cabinets' es un ARRAY en Firebase
+                fetchedNodes = data
+                    .filter(cabinet => cabinet && typeof cabinet.latitude === 'number' && typeof cabinet.longitude === 'number') // Filtrar nulos y datos inválidos
+                    .map(cabinet => ({
+                        id: cabinet.nodeId, // Usar nodeId como ID
+                        lat: cabinet.latitude, // Mapear latitude -> lat
+                        lon: cabinet.longitude, // Mapear longitude -> lon
+                        name: cabinet.location || `Gabinete ${cabinet.nodeId}`, // Usar location o un nombre por defecto
+                        status: cabinet.status,
+                        originalData: cabinet // Guardar data original si es necesario
+                    }));
+            } else if (typeof data === 'object' && data !== null) {
+                // Manejar si 'cabinets' es un OBJETO en Firebase (común para arrays guardados)
+                fetchedNodes = Object.keys(data).map(key => {
+                    const cabinet = data[key];
+                    // Asegurarse que el gabiente tiene datos válidos
+                    if (cabinet && typeof cabinet.latitude === 'number' && typeof cabinet.longitude === 'number') {
+                        return {
+                            id: cabinet.nodeId || key, // Usar nodeId o la clave de Firebase como ID
+                            lat: cabinet.latitude, // Mapear latitude -> lat
+                            lon: cabinet.longitude, // Mapear longitude -> lon
+                            name: cabinet.location || `Gabinete ${cabinet.nodeId}`, // Usar location o un nombre por defecto
+                            status: cabinet.status,
+                            originalData: cabinet // Guardar data original
+                        };
+                    }
+                    return null; // Ignorar este elemento
+                }).filter(Boolean); // Filtrar los nulos
+            }
         }
 
         if (fetchedNodes.length > 0) {
             appState.nodes = fetchedNodes;
-            saveNodesToLocal(fetchedNodes); // Guardar el resultado de la sincronización
-            updateUI(appState);
+            saveNodesToLocal(fetchedNodes); // Guardar el resultado
+            updateUI(appState); // Actualizar toda la UI con los nuevos datos
             console.log(`✅ Sincronización exitosa. Total de nodos: ${fetchedNodes.length}`);
-            appState.syncRetries = 0;
         } else {
-            // Esto podría ser normal si no hay datos en Firebase
             console.log('ℹ️ Sincronización completa, no se encontraron nodos en Firebase.');
+            appState.nodes = []; // Limpiar si no hay nodos
+            saveNodesToLocal([]);
+            updateUI(appState);
         }
-    } catch (error) {
-        appState.syncRetries++;
-        console.error(`❌ Error en fetchNodesFromFirebase (Intento ${appState.syncRetries}):`, error);
-        
-        if (appState.syncRetries < CONFIG.SYNC.MAX_RETRIES) {
-            // Lógica de reintento simple
-        } else {
-            console.error('🛑 Se alcanzó el número máximo de reintentos de sincronización.');
-        }
-    }
+    }, (error) => {
+        console.error('❌ Error en el listener de Firebase:', error);
+    });
 }
 
 // -----------------------------
@@ -135,46 +147,39 @@ function drawMarkers(appState) {
         return;
     }
 
-    // 1. Limpiar marcadores existentes
     appState.vectorSource.clear();
     
-    // Si no hay nodos, terminamos
     if (appState.nodes.length === 0) {
         console.log('ℹ️ No hay nodos para dibujar en el mapa.');
         return;
     }
 
-    // Estilo del marcador (usando el SVG base64 de CONFIG)
     const markerStyle = new ol.style.Style({
         image: new ol.style.Icon({
-            anchor: [0.5, 1], // Centro inferior
+            anchor: [0.5, 1],
             src: CONFIG.MAP.MARKER_ICON,
             scale: 1.5,
         }),
     });
 
-    // 2. Crear nuevas Features (marcadores)
     const features = appState.nodes.map(node => {
-        // Asegúrate de que las coordenadas sean válidas
         if (typeof node.lat !== 'number' || typeof node.lon !== 'number') {
              console.warn(`⚠️ Nodo inválido (lat/lon faltante):`, node);
              return null;
         }
 
-        // Crear el punto de geometría en coordenadas de OpenLayers (Proyección WGS84 a Web Mercator)
         const point = new ol.geom.Point(ol.proj.fromLonLat([node.lon, node.lat]));
         
         const feature = new ol.Feature({
             geometry: point,
-            // Guardar los datos del nodo para usarlos en el evento 'click'
             nodeData: node 
         });
         
+        feature.setId(node.id); // Asignar ID al feature para buscarlo
         feature.setStyle(markerStyle);
         return feature;
-    }).filter(f => f !== null); // Filtrar nodos inválidos
+    }).filter(f => f !== null); 
 
-    // 3. Añadir las Features a la fuente del vector
     appState.vectorSource.addFeatures(features);
     console.log(`🗺️ Dibujados ${features.length} marcadores en el mapa.`);
 }
@@ -186,57 +191,110 @@ function drawMarkers(appState) {
 function updateUI(appState) {
     console.log('🎨 Actualizando interfaz de usuario...');
     
-    // 1. Dibujar los marcadores en el mapa
     drawMarkers(appState);
-
-    // 2. Actualizar la lista o sección de reportes/nodos (Implementar aquí)
-    updateNodeList(appState); 
-
-    // Opcional: Centrar el mapa si es la carga inicial y hay nodos
-    if (appState.nodes.length > 0 && appState.map) {
-        // Se podría añadir lógica para ajustar la vista al 'extent' (límites) de todos los marcadores
-    }
+    updateNodeList(appState); // Actualizar la lista de nodos/reportes
 }
 
 /**
- * Muestra la información detallada de un nodo al hacer clic en su marcador.
+ * Muestra la información detallada de un nodo en el panel izquierdo.
  * @param {Object} nodeData Datos del nodo.
  * @param {AppState} appState Estado global de la aplicación.
  */
 function displayNodeInfo(nodeData, appState) {
     console.log('ℹ️ Mostrar información del nodo:', nodeData);
     
-    // Lógica para rellenar el sidebar
-    const infoSidebar = document.getElementById('sidebar-info');
-    if (infoSidebar) {
-        // Ejemplo simple de contenido
-        infoSidebar.innerHTML = `
-            <h3>${nodeData.name || 'Nodo Desconocido'}</h3>
-            <p>ID: ${nodeData.id}</p>
-            <p>Lat: ${nodeData.lat.toFixed(4)}, Lon: ${nodeData.lon.toFixed(4)}</p>
-            <p>Estado: ${nodeData.status || 'OK'}</p>
-            <button>Ver Detalles</button>
+    const sidebarContent = document.getElementById('sidebarContent');
+    const infoLoading = document.getElementById('infoLoading');
+    
+    if (sidebarContent) {
+        // Ocultar mensaje de "Selecciona un nodo"
+        if(infoLoading) infoLoading.style.display = 'none';
+
+        // (MEJORADO) Contenido HTML más estructurado
+        sidebarContent.innerHTML = `
+            <div class="node-info-card">
+                <h3>${nodeData.name || 'Nodo Desconocido'}</h3>
+                <p><strong>ID:</strong> ${nodeData.id}</p>
+                <p><strong>Estado:</strong> ${nodeData.status || 'OK'}</p>
+                <p><strong>Coordenadas:</strong> ${nodeData.lat.toFixed(4)}, ${nodeData.lon.toFixed(4)}</p>
+                <button class="info-btn" onclick="AppManager.viewNodeOnMap('${nodeData.id}')">Ver en Mapa</button>
+            </div>
         `;
         
-        // Mostrar panel en móvil (ya estaba en tu código original)
+        // Mostrar panel en móvil
         if (window.innerWidth <= 768) {
-            infoSidebar.classList.add('is-open');
+            document.getElementById('sidebar-info').classList.add('is-open');
             document.getElementById('sidebar-nodes').classList.remove('is-open');
         }
     }
 }
 
 /**
- * Simulación de función para actualizar la lista de nodos en el sidebar
- * (Necesitas implementar el DOM real para esta parte)
+ * Centra el mapa en un nodo específico.
+ * @param {string} nodeId El ID del nodo.
+ * @param {AppState} appState Estado global de la aplicación.
+ */
+function viewNodeOnMap(nodeId, appState) {
+    if (!appState.map || !appState.vectorSource) return;
+
+    const feature = appState.vectorSource.getFeatureById(nodeId);
+    if (feature) {
+        const geometry = feature.getGeometry();
+        appState.map.getView().animate({
+            center: geometry.getCoordinates(),
+            zoom: 16, // Zoom más cercano al ver un nodo
+            duration: 1000
+        });
+    }
+}
+
+/**
+ * Actualiza la lista en el panel derecho (Nodos o Reportes).
  * @param {AppState} appState Estado global de la aplicación.
  */
 function updateNodeList(appState) {
-    const listElement = document.getElementById('node-list');
-    if (listElement) {
+    const listElement = document.getElementById('nodeList');
+    const listTitle = document.getElementById('sidebarTitle');
+    
+    if (!listElement || !listTitle) return;
+
+    listTitle.textContent = appState.activeSection; // Actualizar título
+
+    if (appState.activeSection === 'Reportes') {
+        listElement.innerHTML = `
+            <div class="loading-state">
+                <span>La sección de reportes no está implementada.</span>
+            </div>
+        `;
+    } else if (appState.activeSection === 'Nodos') {
+        if (appState.nodes.length === 0) {
+            listElement.innerHTML = `
+                <div class="loading-state">
+                    <span>No hay nodos para mostrar.</span>
+                </div>
+            `;
+            return;
+        }
+
+        // (MEJORADO) Crear lista de nodos interactiva
         listElement.innerHTML = appState.nodes.map(node => 
-            `<li>${node.name || 'Nodo'} (${node.id})</li>`
+            `<button class="node-list-item" onclick="AppManager.displayNodeById('${node.id}')">
+                <span class="node-list-name">${node.name || 'Nodo'}</span>
+                <span class="node-list-id">${node.id}</span>
+            </button>`
         ).join('');
+    }
+}
+
+/**
+ * Función helper para ser llamada desde el HTML (onclick)
+ * @param {string} nodeId 
+ */
+function displayNodeById(nodeId) {
+    const node = window.AppManager.appState.nodes.find(n => n.id === nodeId);
+    if (node) {
+        displayNodeInfo(node, window.AppManager.appState);
+        viewNodeOnMap(nodeId, window.AppManager.appState); // Centrar mapa también
     }
 }
 
@@ -245,38 +303,29 @@ function updateNodeList(appState) {
 // --- LÓGICA PRINCIPAL DE LA APLICACIÓN ---
 // ------------------------------------------
 
-// Inicialización de la aplicación
 async function initApplication() {
+    // Exponer el estado global para acceso de funciones helper
     const appState = new AppState();
+    window.AppManager.appState = appState; 
     
     try {
-        // Inicializar Firebase
         const app = firebase.initializeApp(CONFIG.FIREBASE);
         const database = firebase.database();
         
-        // Configurar detección de conectividad
         setupConnectivityMonitoring(appState);
-        
-        // Inicializar componentes
-        // Línea 54 del código original
-        initializeDataSync(appState, database); 
         await initializeMap(appState);
         
-        // Carga inicial de datos
-        // Línea 57 del código original
+        // Carga inicial y configuración del listener
         await loadInitialData(appState, database); 
         
         console.log('✅ Aplicación inicializada correctamente');
         
     } catch (error) {
         console.error('❌ Error en inicialización:', error);
-        // Propaga el error para que se pueda ver en la consola del navegador
-        // Línea 62 del código original
         throw error;
     }
 }
 
-// Monitoreo de conectividad
 function setupConnectivityMonitoring(appState) {
     const updateOnlineStatus = () => {
         appState.isOnline = navigator.onLine;
@@ -286,16 +335,11 @@ function setupConnectivityMonitoring(appState) {
             statusElement.textContent = appState.isOnline ? '🟢 En línea' : '🔴 Sin conexión';
             statusElement.style.background = appState.isOnline ? '#10b981' : '#ef4444';
         }
-        
-        if (appState.isOnline) {
-            appState.syncRetries = 0; 
-        }
     };
 
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     
-    // Crear elemento de estado de conectividad (si no existe)
     if (!document.getElementById('connectivityStatus')) {
         const connectivityElement = document.createElement('div');
         connectivityElement.id = 'connectivityStatus';
@@ -316,7 +360,6 @@ function setupConnectivityMonitoring(appState) {
     updateOnlineStatus();
 }
 
-// Inicialización del mapa
 async function initializeMap(appState) {
     return new Promise((resolve) => {
         if (typeof ol === 'undefined') {
@@ -342,76 +385,70 @@ async function initializeMap(appState) {
             }),
         });
 
-        // Evento de clic optimizado
+        // Evento de clic en el mapa
         appState.map.on('click', function(evt) {
             const feature = appState.map.forEachFeatureAtPixel(evt.pixel, (feature) => feature);
             if (feature) {
                 const nodeData = feature.get('nodeData');
                 if (nodeData) {
                     displayNodeInfo(nodeData, appState);
-                    
-                    // Mostrar panel en móvil
-                    if (window.innerWidth <= 768) {
-                        const sidebarInfo = document.getElementById('sidebar-info');
-                        const sidebarNodes = document.getElementById('sidebar-nodes');
-                        if (sidebarInfo) sidebarInfo.classList.add('is-open');
-                        if (sidebarNodes) sidebarNodes.classList.remove('is-open');
-                    }
                 }
             }
         });
 
-        // Remover estado de carga (asumiendo que hay un elemento o estilo '::before' que se quiere quitar)
+        // (MEJORADO) Quitar estado de carga añadiendo una clase
         const mapElement = document.getElementById('map');
         if (mapElement) {
-            // Esta línea es difícil de manejar desde JS vanilla, a menos que se use un DOM element real.
-            // Para fines prácticos, se asume que una clase o estilo se eliminaría.
-            mapElement.classList.remove('map-loading'); 
+            mapElement.classList.add('map-loaded');
         }
 
         resolve();
     });
 }
 
-// Sincronización de datos
-function initializeDataSync(appState, database) {
-    // Sincronización periódica
-    // Línea 162 del código original
-    setInterval(() => {
-        // Línea 164 del código original
-        if (appState.isOnline) {
-            fetchNodesFromFirebase(appState, database);
-        }
-    }, CONFIG.SYNC.INTERVAL);
+// Carga inicial de datos (MEJORADO)
+async function loadInitialData(appState, database) {
+    // 1. Cargar desde localStorage primero (Offline-first)
+    const localNodes = getNodesFromLocal();
+    if (localNodes.length > 0) {
+        appState.nodes = localNodes;
+        updateUI(appState); // Actualizar UI con datos locales
+        console.log(`📁 Cargados ${localNodes.length} nodos desde caché local`);
+    }
 
-    // Sincronización cuando vuelve la conexión
+    // 2. Configurar el listener de Firebase (manejará online/offline)
+    if (appState.isOnline) {
+        setupFirebaseListener(appState, database);
+    } else {
+        console.warn('⚠️ Sin conexión. Mostrando datos locales. Se sincronizará al reconectar.');
+    }
+    
+    // Listener para reconectar
     window.addEventListener('online', () => {
-        if (appState.isOnline) {
-            fetchNodesFromFirebase(appState, database);
+        if (!window.firebaseListenerAttached) { // Evitar múltiples listeners
+             setupFirebaseListener(appState, database);
+             window.firebaseListenerAttached = true;
         }
     });
 }
 
-// Carga inicial de datos
-async function loadInitialData(appState, database) {
-    // 1. Cargar desde localStorage
-    // Línea 179 del código original
-    const localNodes = getNodesFromLocal();
-    if (localNodes.length > 0) {
-        appState.nodes = localNodes;
-        updateUI(appState);
-        console.log(`📁 Cargados ${localNodes.length} nodos desde caché local`);
-    }
-
-    // 2. Intentar sincronizar con Firebase
-    if (appState.isOnline) {
-        await fetchNodesFromFirebase(appState, database);
+/**
+ * Establece la sección activa (llamada desde HTML).
+ * @param {'Reportes' | 'Nodos'} sectionName 
+ */
+function setActiveSection(sectionName) {
+    if (window.AppManager.appState) {
+        window.AppManager.appState.activeSection = sectionName;
+        updateNodeList(window.AppManager.appState); // Actualizar la lista
     }
 }
 
-
-// Exportar para uso global si es necesario
+// Exportar para uso global
 window.AppManager = {
     initApplication,
-    CONFIG
+    CONFIG,
+    setActiveSection, // Exponer para botones
+    displayNodeById,  // Exponer para clics en la lista
+    viewNodeOnMap,    // Exponer para botón en tarjeta de info
+    appState: null      // Se llenará en initApplication
 };
